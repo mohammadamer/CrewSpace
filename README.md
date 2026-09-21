@@ -17,6 +17,7 @@ The current branch contains the Phase 1 foundation and Phase 2 workspace collabo
 - Workspace invitations and shareable invitation links.
 - Invitation expiration, revocation, usage limits, role restrictions, optional passwords, and authenticated acceptance.
 - Workspace member listing, role management, removals, settings, and audit records.
+- Persistent workspace-scoped Agents and Personas, starter teammates, statuses, capabilities, profiles, and activity.
 
 Persistent Agents, memory, conversations, and orchestration are planned for later phases. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
 
@@ -77,6 +78,6 @@ docs/          Architecture, API, security, and development documentation
 
 ## Roadmap
 
-Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Later phases add Personas, persistent Agents, private Agent Knowledge, Conversations, Agent Runtime, initiative, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
+Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Phase 3 adds persistent Agents and Personas. Later phases add private Agent Knowledge, Conversations, Agent Runtime, initiative, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
 
 Product decisions live in [ProductDecisions.md](ProductDecisions.md), canonical domain terminology lives in [CONTEXT.md](CONTEXT.md), and the Phase 2 API is documented in [docs/api.md](docs/api.md).
