@@ -1,0 +1,12 @@
+.agents/
+.vscode/
+node_modules/
+dist/
+.turbo/
+ProductSummary
+README.md
+pnpm-lock.yaml
+packages/database/prisma/
+.env.example
+.gitignore
+.prettierignore
