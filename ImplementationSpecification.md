@@ -107,22 +107,22 @@ Package dependencies must point inward toward domain abstractions. Client applic
 
 ## 5. Domain Boundaries
 
-| Boundary | Owns | Must not own |
-|---|---|---|
-| Identity | Users, sessions, authentication providers | Workspace roles |
-| Workspace | Workspaces, membership, invitations, tenant scope | Agent reasoning |
-| Permissions | Roles, capabilities, authorization decisions | UI-only visibility |
-| Agents | Persistent Agent identity, Persona, status, capabilities | Provider-specific API calls |
-| Memory | Scoped memory lifecycle and retrieval | Arbitrary conversation archiving |
-| Relationships | Collaboration Context and interaction history | Literal emotional state |
-| Conversations | Participants, messages, conversation types | Model execution policy |
-| Orchestration | Agent execution, scheduling, Convene | Client rendering |
-| Knowledge | Shared/project knowledge and provider abstraction | Private access bypasses |
-| Tasks | Work items, dependencies, status transitions | Agent autonomy decisions |
-| Decisions | Durable conclusions and provenance | Unstructured chat transcripts |
-| Tools | Tool registration, permissions, execution metadata | Implicit capabilities |
-| Events | Typed domain events and delivery abstraction | Undeclared side effects |
-| Notifications | User-facing notification policy and delivery state | Domain authorization |
+| Boundary      | Owns                                                     | Must not own                     |
+| ------------- | -------------------------------------------------------- | -------------------------------- |
+| Identity      | Users, sessions, authentication providers                | Workspace roles                  |
+| Workspace     | Workspaces, membership, invitations, tenant scope        | Agent reasoning                  |
+| Permissions   | Roles, capabilities, authorization decisions             | UI-only visibility               |
+| Agents        | Persistent Agent identity, Persona, status, capabilities | Provider-specific API calls      |
+| Memory        | Scoped memory lifecycle and retrieval                    | Arbitrary conversation archiving |
+| Relationships | Collaboration Context and interaction history            | Literal emotional state          |
+| Conversations | Participants, messages, conversation types               | Model execution policy           |
+| Orchestration | Agent execution, scheduling, Convene                     | Client rendering                 |
+| Knowledge     | Shared/project knowledge and provider abstraction        | Private access bypasses          |
+| Tasks         | Work items, dependencies, status transitions             | Agent autonomy decisions         |
+| Decisions     | Durable conclusions and provenance                       | Unstructured chat transcripts    |
+| Tools         | Tool registration, permissions, execution metadata       | Implicit capabilities            |
+| Events        | Typed domain events and delivery abstraction             | Undeclared side effects          |
+| Notifications | User-facing notification policy and delivery state       | Domain authorization             |
 
 ## 6. Core Domain Model
 
