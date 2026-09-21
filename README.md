@@ -37,3 +37,43 @@ DATABASE_URL=postgresql://crewspace:crewspace@localhost:5432/crewspace pnpm --fi
 ```
 
 See [docs/development.md](docs/development.md), [docs/architecture.md](docs/architecture.md), and [docs/api.md](docs/api.md) for details.
+
+## Run Locally
+
+Start the API after applying the migration:
+
+```bash
+DATABASE_URL=postgresql://crewspace:crewspace@localhost:5432/crewspace \
+	pnpm --filter @crewspace/api dev
+```
+
+In another terminal, start the Web client:
+
+```bash
+pnpm --filter @crewspace/web dev
+```
+
+The API runs on `http://localhost:3000` and the Web client runs on the Vite development port shown in the terminal. Desktop and Mobile shells are available through their respective workspace scripts:
+
+```bash
+pnpm --filter @crewspace/desktop dev
+pnpm --filter @crewspace/mobile dev
+```
+
+## Repository Layout
+
+```text
+apps/api       NestJS API and WebSocket gateway
+apps/web       React Web client
+apps/desktop   Tauri-ready React Desktop client
+apps/mobile    Expo React Native client
+apps/worker    Background worker entrypoint
+packages/*     Shared contracts, domain primitives, database, UI, and platform code
+docs/          Architecture, API, security, and development documentation
+```
+
+## Roadmap
+
+Phase 1 establishes identity, Workspace tenancy, server-side roles, shared contracts, and first-class client shells. Later phases add persistent Agents, Personas, private Agent Knowledge, Conversations, Agent Runtime, initiative, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
+
+The complete phased plan and acceptance gates are documented in [ImplementationSpecification.md](ImplementationSpecification.md). Product decisions live in [ProductDecisions.md](ProductDecisions.md), and canonical domain terminology lives in [CONTEXT.md](CONTEXT.md).
