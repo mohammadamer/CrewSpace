@@ -8,9 +8,19 @@ import { WorkspaceService } from './workspace/workspace.service';
 import { EventsGateway } from './events/events.gateway';
 import { InMemoryEventBus } from './events/event-bus';
 import { PermissionPolicy } from './permissions/permission.policy';
+import { InvitationController } from './invitations/invitation.controller';
+import { InvitationService } from './invitations/invitation.service';
+import { MemberController } from './workspace/member.controller';
+import { MemberService } from './workspace/member.service';
 
 @Module({
-  controllers: [HealthController, AuthController, WorkspaceController],
+  controllers: [
+    HealthController,
+    AuthController,
+    WorkspaceController,
+    InvitationController,
+    MemberController,
+  ],
   providers: [
     PrismaService,
     AuthService,
@@ -18,6 +28,8 @@ import { PermissionPolicy } from './permissions/permission.policy';
     PermissionPolicy,
     InMemoryEventBus,
     EventsGateway,
+    InvitationService,
+    MemberService,
   ],
 })
 export class AppModule {}

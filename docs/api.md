@@ -12,5 +12,16 @@ Phase 1 endpoints:
 - `GET /workspaces`
 - `POST /workspaces`
 - `GET /workspaces/:workspaceId`
+- `GET /workspaces/:workspaceId/members`
+- `PATCH /workspaces/:workspaceId/members/:userId`
+- `DELETE /workspaces/:workspaceId/members/:userId`
+- `PATCH /workspaces/:workspaceId/settings`
+- `GET /workspaces/:workspaceId/invitations`
+- `POST /workspaces/:workspaceId/invitations/email`
+- `POST /workspaces/:workspaceId/invitations/link`
+- `DELETE /workspaces/:workspaceId/invitations/:invitationId`
+- `POST /invitations/accept`
 
 Protected endpoints require `Authorization: Bearer <session>`. Tenant-owned data is always resolved through the authenticated User's Workspace membership.
+
+Invitation tokens are stored as hashes and returned only when an invitation is created. Email invitations require the authenticated user's email to match; shareable links can enforce expiration, usage limits, and an optional password. Invitation creation, acceptance, revocation, member changes, and settings changes create audit records.

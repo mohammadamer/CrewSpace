@@ -14,6 +14,7 @@ The current branch implements the foundation:
 - Workspace creation, membership, and server-side roles.
 - Typed contracts, an in-memory event bus, and WebSocket gateway foundation.
 - Web, Tauri-ready Desktop, and Expo-ready Mobile shells.
+- Phase 2 workspace invitations, shareable links, member management, settings, and audit records.
 
 Agents, memory, conversations, and orchestration are planned for later phases. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
 
