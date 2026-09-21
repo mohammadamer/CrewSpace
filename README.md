@@ -40,11 +40,11 @@ See [docs/development.md](docs/development.md), [docs/architecture.md](docs/arch
 
 ## Run Locally
 
-Start the API after applying the migration:
+Start the API from the repository root after applying the migration:
 
 ```bash
 DATABASE_URL=postgresql://crewspace:crewspace@localhost:5432/crewspace \
-	pnpm --filter @crewspace/api dev
+  pnpm --filter @crewspace/api dev
 ```
 
 In another terminal, start the Web client:
