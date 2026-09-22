@@ -24,6 +24,8 @@ import { ProjectsController } from './work/projects.controller';
 import { ProjectsService } from './work/projects.service';
 import { ConveneController } from './convene/convene.controller';
 import { ConveneService } from './convene/convene.service';
+import { ApprovalController } from './approvals/approval.controller';
+import { ApprovalService } from './approvals/approval.service';
 import { AgentCommunicationController } from './agent-communication/communication.controller';
 import { AgentCommunicationService } from './agent-communication/communication.service';
 import { AgentCommunicationPolicy } from './agent-communication/communication.policy';
@@ -45,6 +47,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     ExecutionController,
     ProjectsController,
     ConveneController,
+    ApprovalController,
     AgentCommunicationController,
     CollaborationContextController,
     InitiativeController,
@@ -69,6 +72,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     AgentCommunicationPolicy,
     ProjectsService,
     ConveneService,
+    ApprovalService,
     CollaborationContextService,
     InitiativeService,
     AgentScheduler,
