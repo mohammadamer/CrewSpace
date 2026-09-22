@@ -33,6 +33,8 @@ Phase 1 endpoints:
 - `GET /workspaces/:workspaceId/conversations/:conversationId`
 - `POST /workspaces/:workspaceId/conversations/:conversationId/messages`
 - `GET /workspaces/:workspaceId/conversations/:conversationId/messages`
+- `POST /workspaces/:workspaceId/agents/:agentId/executions`
+- `POST /workspaces/:workspaceId/executions/:executionId/cancel`
 
 Protected endpoints require `Authorization: Bearer <session>`. Tenant-owned data is always resolved through the authenticated User's Workspace membership.
 
@@ -41,3 +43,5 @@ Invitation tokens are stored as hashes and returned only when an invitation is c
 Agent and Persona endpoints require Workspace membership. Agent creation and updates are limited to non-Guest members, while starter-team creation requires an Admin or Owner. Agent profiles include Persona, capabilities, status, and recent activity.
 
 Conversation endpoints require non-Guest Workspace membership and conversation membership. Conversation creation validates every user and Agent participant against the requested Workspace and automatically includes the creating User. Message history uses cursor pagination ordered by creation time and message ID. Human-authored message creation publishes a typed `MessageCreated` event; Agent-authored messages remain reserved for the runtime phase.
+
+Execution endpoints require non-Guest Workspace membership and validate the Agent's Workspace scope. The runtime currently uses a deterministic MockRuntime behind the `AgentRuntime` interface. Execution state records attempts, timeout, cancellation, failure, output, and usage; lifecycle events are published without provider-specific calls in domain logic.
