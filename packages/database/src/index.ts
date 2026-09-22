@@ -1,6 +1,8 @@
 export {
   ApprovalRisk,
   ApprovalStatus,
+  IntegrationProvider,
+  IntegrationStatus,
   AgentCommunicationStatus,
   AgentExecutionStatus,
   AgentKnowledgeVisibility,

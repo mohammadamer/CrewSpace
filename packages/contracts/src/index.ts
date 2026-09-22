@@ -63,6 +63,10 @@ export type DomainEvent =
   | EventEnvelope<'TaskUpdated', { taskId: string; status: string }>
   | EventEnvelope<'DecisionCreated', { decisionId: string; title: string }>
   | EventEnvelope<
+      'IntegrationCreated',
+      { integrationId: string; provider: string; name: string }
+    >
+  | EventEnvelope<
       'ApprovalUpdated',
       { approvalId: string; agentId: AgentId; status: string; action: string }
     >

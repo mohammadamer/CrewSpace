@@ -34,6 +34,8 @@ import { CollaborationContextService } from './collaboration-context/context.ser
 import { InitiativeController } from './initiative/initiative.controller';
 import { InitiativeService } from './initiative/initiative.service';
 import { AgentScheduler } from './initiative/agent-scheduler';
+import { IntegrationController } from './integrations/integration.controller';
+import { IntegrationService } from './integrations/integration.service';
 
 @Module({
   controllers: [
@@ -51,6 +53,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     AgentCommunicationController,
     CollaborationContextController,
     InitiativeController,
+    IntegrationController,
   ],
   providers: [
     PrismaService,
@@ -76,6 +79,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     CollaborationContextService,
     InitiativeService,
     AgentScheduler,
+    IntegrationService,
   ],
 })
 export class AppModule {}
