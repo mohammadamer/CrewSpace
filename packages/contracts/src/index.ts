@@ -3,6 +3,7 @@ export type Brand<T, B extends string> = T & { readonly __brand: B };
 export type UserId = Brand<string, 'UserId'>;
 export type WorkspaceId = Brand<string, 'WorkspaceId'>;
 export type AgentId = Brand<string, 'AgentId'>;
+export type ConversationId = Brand<string, 'ConversationId'>;
 
 export type WorkspaceRole = 'OWNER' | 'ADMIN' | 'MEMBER' | 'GUEST';
 
@@ -32,4 +33,13 @@ export type DomainEvent =
   | EventEnvelope<'WorkspaceCreated', { name: string }>
   | EventEnvelope<'MemberInvited', { email: string; role: WorkspaceRole }>
   | EventEnvelope<'AgentCreated', { name: string; role: string }>
-  | EventEnvelope<'AgentStatusChanged', { status: string }>;
+  | EventEnvelope<'AgentStatusChanged', { status: string }>
+  | EventEnvelope<
+      'MessageCreated',
+      {
+        conversationId: ConversationId;
+        messageId: string;
+        authorUserId: UserId;
+        content: string;
+      }
+    >;

@@ -14,6 +14,8 @@ import { MemberController } from './workspace/member.controller';
 import { MemberService } from './workspace/member.service';
 import { AgentController } from './agents/agent.controller';
 import { AgentService } from './agents/agent.service';
+import { ConversationController } from './conversations/conversation.controller';
+import { ConversationService } from './conversations/conversation.service';
 
 @Module({
   controllers: [
@@ -23,6 +25,7 @@ import { AgentService } from './agents/agent.service';
     InvitationController,
     MemberController,
     AgentController,
+    ConversationController,
   ],
   providers: [
     PrismaService,
@@ -34,6 +37,7 @@ import { AgentService } from './agents/agent.service';
     InvitationService,
     MemberService,
     AgentService,
+    ConversationService,
   ],
 })
 export class AppModule {}
