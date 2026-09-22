@@ -4,6 +4,7 @@ export {
   AgentKnowledgeVisibility,
   AgentMemoryType,
   AgentStatus,
+  AgentWakeStatus,
   ConversationType,
   InvitationStatus,
   InvitationType,

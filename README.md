@@ -6,7 +6,7 @@ This is not another chatbot. CrewSpace is designed around persistent Agent ident
 
 ## Current Status
 
-The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, and the Phase 8 collaboration-context foundation:
+The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, the Phase 8 collaboration-context foundation, and the Phase 9 Agent initiative scheduler foundation:
 
 - pnpm and Turborepo monorepo.
 - NestJS API with PostgreSQL, Prisma, and Redis local infrastructure.
@@ -26,8 +26,9 @@ The current branch contains the Phase 1 foundation, Phase 2 workspace collaborat
 - Auditable allowed and blocked communication attempts with Agent activity records.
 - Workspace-scoped Agent relationships with summaries, communication preferences, interaction history, and unresolved topics.
 - Permission-scoped relationship editing, interaction recording, audit logs, and typed context-update events.
+- Bounded Agent schedules with cadence, time zones, active hours, cooldowns, daily budgets, cancellation, and explicit `NO_ACTION` wake cycles.
 
-Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, and Phase 8 adds inspectable collaboration context without representing literal emotion. Streaming transport, real provider adapters, ContextBuilder retrieval, worker queue integration, and advanced orchestration remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
+Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, and Phase 9 adds bounded initiative scheduling. Queue-backed recurring workers, real provider adapters, ContextBuilder retrieval, and advanced orchestration remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
 
 ## Development
 
@@ -97,6 +98,6 @@ docs/          Architecture, API, security, and development documentation
 
 ## Roadmap
 
-Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Phase 3 adds persistent Agents and Personas. Phase 4 adds private Agent memory, scoped retrieval rules, and explicit inspection permissions without leaking private knowledge. Phase 5 adds the conversation and message backend foundation. Phase 6 adds provider-independent Agent execution and auditable lifecycle state. Phase 7 adds bounded Agent-to-Agent communication with loop and budget controls. Phase 8 adds editable, auditable collaboration context. Later phases add richer runtime integrations, initiative, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
+Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Phase 3 adds persistent Agents and Personas. Phase 4 adds private Agent memory, scoped retrieval rules, and explicit inspection permissions without leaking private knowledge. Phase 5 adds the conversation and message backend foundation. Phase 6 adds provider-independent Agent execution and auditable lifecycle state. Phase 7 adds bounded Agent-to-Agent communication with loop and budget controls. Phase 8 adds editable, auditable collaboration context. Phase 9 adds bounded Agent initiative scheduling. Later phases add richer runtime integrations, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
 
 Product decisions live in [ProductDecisions.md](ProductDecisions.md), canonical domain terminology lives in [CONTEXT.md](CONTEXT.md), and the versioned API is documented in [docs/api.md](docs/api.md).

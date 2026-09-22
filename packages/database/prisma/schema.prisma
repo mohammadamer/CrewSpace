@@ -49,6 +49,7 @@ model Workspace {
   agentExecutions AgentExecution[]
   agentCommunications AgentCommunication[]
   agentRelationships AgentRelationship[]
+  agentSchedules AgentSchedule[]
 
   @@index([createdAt])
 }
@@ -165,6 +166,7 @@ model Agent {
   incomingCommunications AgentCommunication[] @relation("TargetAgentCommunications")
   relationships AgentRelationship[] @relation("AgentRelationships")
   relatedRelationships AgentRelationship[] @relation("RelatedAgentRelationships")
+  schedules AgentSchedule[]
 
   @@index([workspaceId, status])
   @@index([personaId])
@@ -296,6 +298,42 @@ model AgentRelationship {
   @@index([agentId, relatedAgentId])
 }
 
+model AgentSchedule {
+  id                String   @id @default(uuid()) @db.Uuid
+  workspaceId       String   @db.Uuid
+  agentId           String   @db.Uuid
+  enabled           Boolean  @default(true)
+  cadenceMinutes    Int
+  timezone          String
+  activeHoursStart  String
+  activeHoursEnd    String
+  cooldownMinutes   Int      @default(0)
+  dailyBudget       Int      @default(1)
+  budgetUsed        Int      @default(0)
+  budgetResetAt     DateTime?
+  lastWakeAt        DateTime?
+  nextWakeAt        DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  workspace         Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  agent             Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  wakeCycles        AgentWakeCycle[]
+
+  @@unique([workspaceId, agentId])
+  @@index([workspaceId, enabled, nextWakeAt])
+}
+
+model AgentWakeCycle {
+  id          String          @id @default(uuid()) @db.Uuid
+  scheduleId  String          @db.Uuid
+  status      AgentWakeStatus
+  reason      String
+  createdAt   DateTime        @default(now())
+  schedule    AgentSchedule   @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId, createdAt])
+}
+
 model AgentMemory {
   id          String                  @id @default(uuid()) @db.Uuid
   agentId     String                  @db.Uuid
@@ -391,6 +429,12 @@ enum AgentExecutionStatus {
 
 enum AgentCommunicationStatus {
   ALLOWED
+  BLOCKED
+}
+
+enum AgentWakeStatus {
+  EXECUTED
+  NO_ACTION
   BLOCKED
 }
 
