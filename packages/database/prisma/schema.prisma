@@ -26,6 +26,25 @@ enum TaskPriority {
   URGENT
 }
 
+enum IntegrationProvider {
+  GITHUB
+  GITLAB
+  LINEAR
+  JIRA
+  SLACK
+  GOOGLE_DRIVE
+  NOTION
+  CALENDAR
+  MCP
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  DISABLED
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -54,6 +73,8 @@ model User {
   conveneParticipations ConveneParticipant[] @relation("UserConveneParticipants")
   authoredContributions ConveneContribution[] @relation("UserContributions")
   reviewedApprovals ApprovalRequest[] @relation("ApprovalReviewers")
+  createdIntegrations Integration[] @relation("IntegrationCreators")
+  createdIntegrationCredentials IntegrationCredential[]
 }
 
 model Session {
@@ -89,6 +110,8 @@ model Workspace {
   convenes Convene[]
   approvalRequests ApprovalRequest[]
   toolPermissions AgentToolPermission[]
+  integrations Integration[]
+  integrationCredentials IntegrationCredential[]
 
   @@index([createdAt])
 }
@@ -104,6 +127,41 @@ model WorkspaceMember {
 
   @@unique([workspaceId, userId])
   @@index([userId])
+}
+
+model Integration {
+  id            String             @id @default(uuid()) @db.Uuid
+  workspaceId   String             @db.Uuid
+  createdById   String             @db.Uuid
+  name          String
+  provider      IntegrationProvider
+  status        IntegrationStatus  @default(ACTIVE)
+  metadata      Json               @default("{}")
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  workspace     Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy     User               @relation("IntegrationCreators", fields: [createdById], references: [id], onDelete: Restrict)
+  credentials   IntegrationCredential[]
+
+  @@unique([workspaceId, name])
+  @@index([workspaceId, provider])
+}
+
+model IntegrationCredential {
+  id            String             @id @default(uuid()) @db.Uuid
+  workspaceId   String             @db.Uuid
+  integrationId String             @db.Uuid
+  provider      IntegrationProvider
+  encryptedValue String           @db.Text
+  createdById   String             @db.Uuid
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  workspace     Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  integration   Integration        @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  createdBy     User               @relation(fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@unique([integrationId, provider])
+  @@index([workspaceId, provider])
 }
 
 model WorkspaceInvitation {
