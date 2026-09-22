@@ -23,6 +23,8 @@ import { MockRuntime } from './runtime/agent-runtime';
 import { AgentCommunicationController } from './agent-communication/communication.controller';
 import { AgentCommunicationService } from './agent-communication/communication.service';
 import { AgentCommunicationPolicy } from './agent-communication/communication.policy';
+import { CollaborationContextController } from './collaboration-context/context.controller';
+import { CollaborationContextService } from './collaboration-context/context.service';
 
 @Module({
   controllers: [
@@ -35,6 +37,7 @@ import { AgentCommunicationPolicy } from './agent-communication/communication.po
     ConversationController,
     ExecutionController,
     AgentCommunicationController,
+    CollaborationContextController,
   ],
   providers: [
     PrismaService,
@@ -54,6 +57,7 @@ import { AgentCommunicationPolicy } from './agent-communication/communication.po
     },
     AgentCommunicationService,
     AgentCommunicationPolicy,
+    CollaborationContextService,
   ],
 })
 export class AppModule {}
