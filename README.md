@@ -6,7 +6,7 @@ This is not another chatbot. CrewSpace is designed around persistent Agent ident
 
 ## Current Status
 
-The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, the Phase 8 collaboration-context foundation, the Phase 9 Agent initiative scheduler foundation, the Phase 10 Projects, Tasks, and Decisions foundation, the Phase 11 Convene foundation, and the Phase 12 human-approval foundation:
+The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, the Phase 8 collaboration-context foundation, the Phase 9 Agent initiative scheduler foundation, the Phase 10 Projects, Tasks, and Decisions foundation, the Phase 11 Convene foundation, the Phase 12 human-approval foundation, and the Phase 13 realtime synchronization foundation:
 
 - pnpm and Turborepo monorepo.
 - NestJS API with PostgreSQL, Prisma, and Redis local infrastructure.
@@ -33,8 +33,9 @@ The current branch contains the Phase 1 foundation, Phase 2 workspace collaborat
 - Convene sessions with participant selection, discussion/evidence contributions, pause/resume, synthesis, Decisions, and owned action Tasks.
 - Agent-initiated approval requests with risk metadata, human approve/reject/cancel transitions, and capability enablement.
 - Workspace-scoped tool permissions with audited changes and typed approval events for client synchronization.
+- Authenticated Workspace-scoped WebSocket subscriptions with ordered event replay and bounded history-gap handling.
 
-Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, Phase 9 adds bounded initiative scheduling, Phase 10 connects Decisions to durable Tasks, Phase 11 adds structured Convene decisions, and Phase 12 adds explicit human approvals for sensitive Agent actions. Documents, search indexing, richer review workflows, queue-backed recurring workers, real provider adapters, and advanced orchestration remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
+Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, Phase 9 adds bounded initiative scheduling, Phase 10 connects Decisions to durable Tasks, Phase 11 adds structured Convene decisions, Phase 12 adds explicit human approvals for sensitive Agent actions, and Phase 13 hardens authenticated realtime delivery. Offline caches, optimistic reconciliation, push notifications, deep links, documents, search indexing, and advanced orchestration remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
 
 ## Development
 
