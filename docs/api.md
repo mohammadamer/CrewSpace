@@ -35,6 +35,7 @@ Phase 1 endpoints:
 - `GET /workspaces/:workspaceId/conversations/:conversationId/messages`
 - `POST /workspaces/:workspaceId/agents/:agentId/executions`
 - `POST /workspaces/:workspaceId/executions/:executionId/cancel`
+- `POST /workspaces/:workspaceId/conversations/:conversationId/agents/:sourceAgentId/messages`
 
 Protected endpoints require `Authorization: Bearer <session>`. Tenant-owned data is always resolved through the authenticated User's Workspace membership.
 
@@ -45,3 +46,5 @@ Agent and Persona endpoints require Workspace membership. Agent creation and upd
 Conversation endpoints require non-Guest Workspace membership and conversation membership. Conversation creation validates every user and Agent participant against the requested Workspace and automatically includes the creating User. Message history uses cursor pagination ordered by creation time and message ID. Human-authored message creation publishes a typed `MessageCreated` event; Agent-authored messages remain reserved for the runtime phase.
 
 Execution endpoints require non-Guest Workspace membership and validate the Agent's Workspace scope. The runtime currently uses a deterministic MockRuntime behind the `AgentRuntime` interface. Execution state records attempts, timeout, cancellation, failure, output, and usage; lifecycle events are published without provider-specific calls in domain logic.
+
+Agent communication requires both Agents to belong to the Workspace and the conversation. The policy bounds message depth, token count, cumulative budget, cooldown, relevance, and repeated content. Blocked attempts are persisted with a reason and exposed through Agent activity; allowed messages are authored by the source Agent and publish `MessageCreated` with Agent authorship.

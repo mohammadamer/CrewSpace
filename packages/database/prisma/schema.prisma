@@ -47,6 +47,7 @@ model Workspace {
   agentMemories AgentMemory[]
   conversations Conversation[]
   agentExecutions AgentExecution[]
+  agentCommunications AgentCommunication[]
 
   @@index([createdAt])
 }
@@ -159,6 +160,8 @@ model Agent {
   conversationMemberships ConversationMember[] @relation("AgentConversationMembers")
   authoredMessages     Message[]
   executions           AgentExecution[]
+  outgoingCommunications AgentCommunication[] @relation("SourceAgentCommunications")
+  incomingCommunications AgentCommunication[] @relation("TargetAgentCommunications")
 
   @@index([workspaceId, status])
   @@index([personaId])
@@ -209,6 +212,7 @@ model Conversation {
   workspace   Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   members     ConversationMember[]
   messages    Message[]
+  agentCommunications AgentCommunication[]
 
   @@index([workspaceId, updatedAt])
 }
@@ -239,8 +243,32 @@ model Message {
   conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   authorUser     User?         @relation("UserAuthoredMessages", fields: [authorUserId], references: [id], onDelete: SetNull)
   authorAgent    Agent?        @relation(fields: [authorAgentId], references: [id], onDelete: SetNull)
+  agentCommunication AgentCommunication?
 
   @@index([conversationId, createdAt, id])
+}
+
+model AgentCommunication {
+  id             String                   @id @default(uuid()) @db.Uuid
+  workspaceId    String                   @db.Uuid
+  conversationId String                   @db.Uuid
+  sourceAgentId  String                   @db.Uuid
+  targetAgentId  String                   @db.Uuid
+  messageId      String?                  @unique @db.Uuid
+  depth          Int
+  tokenCount     Int
+  status         AgentCommunicationStatus @default(ALLOWED)
+  reason         String?
+  createdAt      DateTime                 @default(now())
+  workspace      Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  conversation   Conversation             @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sourceAgent    Agent                    @relation("SourceAgentCommunications", fields: [sourceAgentId], references: [id], onDelete: Cascade)
+  targetAgent    Agent                    @relation("TargetAgentCommunications", fields: [targetAgentId], references: [id], onDelete: Cascade)
+  message        Message?                 @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, createdAt])
+  @@index([conversationId, createdAt])
+  @@index([sourceAgentId, targetAgentId, createdAt])
 }
 
 model AgentMemory {
@@ -334,6 +362,11 @@ enum AgentExecutionStatus {
   CANCELLED
   TIMED_OUT
   FAILED
+}
+
+enum AgentCommunicationStatus {
+  ALLOWED
+  BLOCKED
 }
 
 enum ConversationType {
