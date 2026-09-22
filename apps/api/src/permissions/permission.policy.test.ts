@@ -17,3 +17,16 @@ test('only admins and owners can manage a workspace', () => {
     policy.requireWorkspaceRole(WorkspaceRole.MEMBER, WorkspaceRole.ADMIN),
   );
 });
+
+test('private agent knowledge requires an owner or explicit inspection permission', () => {
+  const policy = new PermissionPolicy();
+
+  assert.equal(policy.canAccessPrivateAgentKnowledge(false, false), false);
+  assert.equal(policy.canAccessPrivateAgentKnowledge(true, false), true);
+  assert.equal(policy.canAccessPrivateAgentKnowledge(false, true), true);
+
+  assert.throws(() => policy.requirePrivateAgentKnowledgeAccess(false, false));
+  assert.doesNotThrow(() =>
+    policy.requirePrivateAgentKnowledgeAccess(false, true),
+  );
+});

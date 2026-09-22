@@ -40,6 +40,9 @@ model Workspace {
   members   WorkspaceMember[]
   invitations WorkspaceInvitation[]
   auditLogs AuditLog[]
+  personas AgentPersona[]
+  agents Agent[]
+  agentMemories AgentMemory[]
 
   @@index([createdAt])
 }
@@ -110,6 +113,93 @@ model AuditLog {
   @@index([workspaceId, entityType, entityId])
 }
 
+model AgentPersona {
+  id                   String   @id @default(uuid()) @db.Uuid
+  workspaceId          String   @db.Uuid
+  name                 String
+  role                 String
+  personality          String
+  expertise            String
+  responsibilities     Json
+  communicationStyle   String
+  behavioralRules      Json
+  goals                Json
+  constraints          Json
+  systemPrompt         String
+  isBuiltIn            Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  workspace            Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  agents               Agent[]
+
+  @@unique([workspaceId, name])
+  @@index([workspaceId, role])
+}
+
+model Agent {
+  id                  String      @id @default(uuid()) @db.Uuid
+  workspaceId         String      @db.Uuid
+  personaId           String?     @db.Uuid
+  name                String
+  role                String
+  avatar              String?
+  status              AgentStatus @default(OFFLINE)
+  modelConfiguration  Json
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  workspace           Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  persona             AgentPersona? @relation(fields: [personaId], references: [id], onDelete: SetNull)
+  capabilities        AgentCapability[]
+  activities          AgentActivity[]
+  memories            AgentMemory[]
+
+  @@index([workspaceId, status])
+  @@index([personaId])
+}
+
+model AgentMemory {
+  id          String                  @id @default(uuid()) @db.Uuid
+  agentId     String                  @db.Uuid
+  workspaceId String                  @db.Uuid
+  type        AgentMemoryType         @default(OBSERVATION)
+  title       String?
+  content     String
+  source      String?
+  visibility  AgentKnowledgeVisibility @default(PRIVATE)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  agent       Agent                   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  workspace   Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, createdAt])
+  @@index([workspaceId, createdAt])
+}
+
+model AgentCapability {
+  id          String   @id @default(uuid()) @db.Uuid
+  agentId     String   @db.Uuid
+  capability  String
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  agent       Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([agentId, capability])
+  @@index([agentId, enabled])
+}
+
+model AgentActivity {
+  id          String   @id @default(uuid()) @db.Uuid
+  agentId     String   @db.Uuid
+  type        String
+  summary     String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  agent       Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, createdAt])
+}
+
 enum WorkspaceRole {
   OWNER
   ADMIN
@@ -127,4 +217,26 @@ enum InvitationStatus {
   ACCEPTED
   EXPIRED
   REVOKED
+}
+
+enum AgentStatus {
+  AVAILABLE
+  THINKING
+  WORKING
+  WAITING
+  OFFLINE
+  ERROR
+}
+
+enum AgentMemoryType {
+  OBSERVATION
+  NOTE
+  FACT
+  LEARNING
+  FILE_SUMMARY
+}
+
+enum AgentKnowledgeVisibility {
+  PRIVATE
+  SHARED
 }

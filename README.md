@@ -6,7 +6,7 @@ This is not another chatbot. CrewSpace is designed around persistent Agent ident
 
 ## Current Status
 
-The current branch contains the Phase 1 foundation and Phase 2 workspace collaboration:
+The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, and the Phase 4 private Agent memory work:
 
 - pnpm and Turborepo monorepo.
 - NestJS API with PostgreSQL, Prisma, and Redis local infrastructure.
@@ -17,8 +17,10 @@ The current branch contains the Phase 1 foundation and Phase 2 workspace collabo
 - Workspace invitations and shareable invitation links.
 - Invitation expiration, revocation, usage limits, role restrictions, optional passwords, and authenticated acceptance.
 - Workspace member listing, role management, removals, settings, and audit records.
+- Persistent workspace-scoped Agents and Personas, starter teammates, statuses, capabilities, profiles, and activity.
+- Private Agent memory with explicit ownership and inspection permissions, default private visibility, and scoped retrieval boundaries.
 
-Persistent Agents, memory, conversations, and orchestration are planned for later phases. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
+Private Agent Knowledge is now explicitly separated from workspace-shared context, while conversations, orchestration, runtime execution, and later phases remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
 
 ## Development
 
@@ -63,6 +65,17 @@ pnpm --filter @crewspace/desktop dev
 pnpm --filter @crewspace/mobile dev
 ```
 
+## Starter Agent Team
+
+After authenticating and creating a Workspace, an Owner or Admin can create the built-in team:
+
+```bash
+curl -X POST http://localhost:3000/api/v1/workspaces/<workspace-id>/agents/starter-team \
+	-H "Authorization: Bearer <session-token>"
+```
+
+This creates customizable Personas and persistent Agents for Atlas (Researcher), Iris (Product Designer), Bram (Engineer), and Nova (Product Manager). Agent profiles expose status, capabilities, Persona data, and recent activity through the Agent API.
+
 ## Repository Layout
 
 ```text
@@ -77,6 +90,6 @@ docs/          Architecture, API, security, and development documentation
 
 ## Roadmap
 
-Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Later phases add Personas, persistent Agents, private Agent Knowledge, Conversations, Agent Runtime, initiative, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
+Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Phase 3 adds persistent Agents and Personas. Phase 4 adds private Agent memory, scoped retrieval rules, and explicit inspection permissions without leaking private knowledge. Later phases add Conversations, Agent Runtime, initiative, Projects, Tasks, Decisions, Convene, integrations, and offline synchronization.
 
-Product decisions live in [ProductDecisions.md](ProductDecisions.md), canonical domain terminology lives in [CONTEXT.md](CONTEXT.md), and the Phase 2 API is documented in [docs/api.md](docs/api.md).
+Product decisions live in [ProductDecisions.md](ProductDecisions.md), canonical domain terminology lives in [CONTEXT.md](CONTEXT.md), and the versioned API is documented in [docs/api.md](docs/api.md).
