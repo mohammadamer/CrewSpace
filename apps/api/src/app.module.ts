@@ -20,6 +20,9 @@ import { ExecutionController } from './runtime/execution.controller';
 import { AgentExecutionService } from './runtime/execution.service';
 import { ExecutionRunner } from './runtime/execution-runner';
 import { MockRuntime } from './runtime/agent-runtime';
+import { AgentCommunicationController } from './agent-communication/communication.controller';
+import { AgentCommunicationService } from './agent-communication/communication.service';
+import { AgentCommunicationPolicy } from './agent-communication/communication.policy';
 
 @Module({
   controllers: [
@@ -31,6 +34,7 @@ import { MockRuntime } from './runtime/agent-runtime';
     AgentController,
     ConversationController,
     ExecutionController,
+    AgentCommunicationController,
   ],
   providers: [
     PrismaService,
@@ -48,6 +52,8 @@ import { MockRuntime } from './runtime/agent-runtime';
       provide: ExecutionRunner,
       useFactory: () => new ExecutionRunner(new MockRuntime()),
     },
+    AgentCommunicationService,
+    AgentCommunicationPolicy,
   ],
 })
 export class AppModule {}

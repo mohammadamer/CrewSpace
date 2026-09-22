@@ -51,7 +51,8 @@ export type DomainEvent =
       {
         conversationId: ConversationId;
         messageId: string;
-        authorUserId: UserId;
+        authorUserId?: UserId;
+        authorAgentId?: AgentId;
         content: string;
       }
     >;
