@@ -1,4 +1,6 @@
 export {
+  ApprovalRisk,
+  ApprovalStatus,
   AgentCommunicationStatus,
   AgentExecutionStatus,
   AgentKnowledgeVisibility,

@@ -57,6 +57,13 @@ Phase 1 endpoints:
 - `POST /workspaces/:workspaceId/convenes/:conveneId/contributions`
 - `POST /workspaces/:workspaceId/convenes/:conveneId/complete`
 - `POST /workspaces/:workspaceId/convenes/:conveneId/cancel`
+- `GET /workspaces/:workspaceId/approvals`
+- `POST /workspaces/:workspaceId/agents/:agentId/approvals`
+- `POST /workspaces/:workspaceId/approvals/:approvalId/approve`
+- `POST /workspaces/:workspaceId/approvals/:approvalId/reject`
+- `POST /workspaces/:workspaceId/approvals/:approvalId/cancel`
+- `GET /workspaces/:workspaceId/tool-permissions`
+- `POST /workspaces/:workspaceId/tool-permissions`
 - `GET /workspaces/:workspaceId/projects`
 - `POST /workspaces/:workspaceId/projects`
 - `GET /workspaces/:workspaceId/projects/:projectId`
@@ -86,5 +93,7 @@ Collaboration-context reads require Workspace membership. Creating, editing, and
 Initiative schedule reads and wake-cycle inspection require Workspace membership. Creating, editing, and cancelling schedules require a non-Guest role. A wake cycle evaluates enabled state, timezone-aware active hours, cadence, cooldown, and daily budget. Each evaluation records an outcome and reason; `NO_ACTION` is an explicit result rather than an implicit failure. Schedule mutations and wake cycles are audited and wake-cycle events are published.
 
 Convene reads require Workspace membership; lifecycle mutations require a non-Guest Workspace role and Project membership when a Project is attached. A Convene requires multiple participants before starting, accepts discussion and evidence contributions, supports pause/resume, and completes by creating a Decision and optional project-owned action Tasks. Lifecycle transitions and completion are audited and publish `ConveneUpdated` events.
+
+Approval requests are scoped to a Workspace and Agent and include capability, action, risk, payload, reason, and optional expiry metadata. Non-Guest members can review pending requests; expired or terminal requests cannot transition. Approving a request enables the corresponding Agent tool capability, while all request and review transitions are audited and publish `ApprovalUpdated` events. Tool permission changes require an Admin or Owner.
 
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.

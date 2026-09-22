@@ -6,7 +6,7 @@ This is not another chatbot. CrewSpace is designed around persistent Agent ident
 
 ## Current Status
 
-The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, the Phase 8 collaboration-context foundation, the Phase 9 Agent initiative scheduler foundation, the Phase 10 Projects, Tasks, and Decisions foundation, and the Phase 11 Convene foundation:
+The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, the Phase 8 collaboration-context foundation, the Phase 9 Agent initiative scheduler foundation, the Phase 10 Projects, Tasks, and Decisions foundation, the Phase 11 Convene foundation, and the Phase 12 human-approval foundation:
 
 - pnpm and Turborepo monorepo.
 - NestJS API with PostgreSQL, Prisma, and Redis local infrastructure.
@@ -31,8 +31,10 @@ The current branch contains the Phase 1 foundation, Phase 2 workspace collaborat
 - Tasks with priorities, assignments, dependency checks, status transitions, and Decision provenance.
 - Decisions with context, alternatives, conclusions, source provenance, related Tasks, audit records, and typed events.
 - Convene sessions with participant selection, discussion/evidence contributions, pause/resume, synthesis, Decisions, and owned action Tasks.
+- Agent-initiated approval requests with risk metadata, human approve/reject/cancel transitions, and capability enablement.
+- Workspace-scoped tool permissions with audited changes and typed approval events for client synchronization.
 
-Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, Phase 9 adds bounded initiative scheduling, Phase 10 connects Decisions to durable Tasks, and Phase 11 adds structured Convene decisions. Documents, search indexing, richer review workflows, queue-backed recurring workers, real provider adapters, and advanced orchestration remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
+Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, Phase 9 adds bounded initiative scheduling, Phase 10 connects Decisions to durable Tasks, Phase 11 adds structured Convene decisions, and Phase 12 adds explicit human approvals for sensitive Agent actions. Documents, search indexing, richer review workflows, queue-backed recurring workers, real provider adapters, and advanced orchestration remain planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
 
 ## Development
 
@@ -102,6 +104,6 @@ docs/          Architecture, API, security, and development documentation
 
 ## Roadmap
 
-Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Phase 3 adds persistent Agents and Personas. Phase 4 adds private Agent memory, scoped retrieval rules, and explicit inspection permissions without leaking private knowledge. Phase 5 adds the conversation and message backend foundation. Phase 6 adds provider-independent Agent execution and auditable lifecycle state. Phase 7 adds bounded Agent-to-Agent communication with loop and budget controls. Phase 8 adds editable, auditable collaboration context. Phase 9 adds bounded Agent initiative scheduling. Phase 10 adds Projects, Tasks, dependencies, and Decisions. Phase 11 adds structured Convene sessions. Later phases add human approval, integrations, and offline synchronization.
+Phase 1 establishes identity, Workspace tenancy, roles, shared contracts, and first-class client shells. Phase 2 adds invitations and Workspace collaboration. Phase 3 adds persistent Agents and Personas. Phase 4 adds private Agent memory, scoped retrieval rules, and explicit inspection permissions without leaking private knowledge. Phase 5 adds the conversation and message backend foundation. Phase 6 adds provider-independent Agent execution and auditable lifecycle state. Phase 7 adds bounded Agent-to-Agent communication with loop and budget controls. Phase 8 adds editable, auditable collaboration context. Phase 9 adds bounded Agent initiative scheduling. Phase 10 adds Projects, Tasks, dependencies, and Decisions. Phase 11 adds structured Convene sessions. Phase 12 adds human approval and advanced permission records. Later phases add integrations and offline synchronization.
 
 Product decisions live in [ProductDecisions.md](ProductDecisions.md), canonical domain terminology lives in [CONTEXT.md](CONTEXT.md), and the versioned API is documented in [docs/api.md](docs/api.md).

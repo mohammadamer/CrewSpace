@@ -53,6 +53,7 @@ model User {
   createdConvenes Convene[] @relation("ConveneCreators")
   conveneParticipations ConveneParticipant[] @relation("UserConveneParticipants")
   authoredContributions ConveneContribution[] @relation("UserContributions")
+  reviewedApprovals ApprovalRequest[] @relation("ApprovalReviewers")
 }
 
 model Session {
@@ -86,6 +87,8 @@ model Workspace {
   tasks Task[]
   decisions Decision[]
   convenes Convene[]
+  approvalRequests ApprovalRequest[]
+  toolPermissions AgentToolPermission[]
 
   @@index([createdAt])
 }
@@ -207,6 +210,8 @@ model Agent {
   assignedTasks Task[] @relation("AgentTaskAssignees")
   conveneParticipations ConveneParticipant[] @relation("AgentConveneParticipants")
   authoredContributions ConveneContribution[] @relation("AgentContributions")
+  approvalRequests ApprovalRequest[]
+  toolPermissions AgentToolPermission[]
 
   @@index([workspaceId, status])
   @@index([personaId])
@@ -576,6 +581,44 @@ model AgentActivity {
   @@index([agentId, createdAt])
 }
 
+model AgentToolPermission {
+  id          String   @id @default(uuid()) @db.Uuid
+  workspaceId String   @db.Uuid
+  agentId     String   @db.Uuid
+  capability  String
+  enabled     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  agent       Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([agentId, capability])
+  @@index([workspaceId, enabled])
+}
+
+model ApprovalRequest {
+  id                String         @id @default(uuid()) @db.Uuid
+  workspaceId       String         @db.Uuid
+  agentId           String         @db.Uuid
+  reviewedByUserId  String?        @db.Uuid
+  capability        String
+  action            String
+  risk              ApprovalRisk
+  payload           Json
+  reason            String
+  status            ApprovalStatus @default(PENDING)
+  expiresAt         DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  reviewedAt        DateTime?
+  workspace         Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  agent             Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  reviewedBy        User?          @relation("ApprovalReviewers", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, status, createdAt])
+  @@index([agentId, createdAt])
+}
+
 enum WorkspaceRole {
   OWNER
   ADMIN
@@ -635,6 +678,21 @@ enum AgentWakeStatus {
   EXECUTED
   NO_ACTION
   BLOCKED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+enum ApprovalRisk {
+  LOW
+  MEDIUM
+  HIGH
+  DESTRUCTIVE
 }
 
 enum ConversationType {
