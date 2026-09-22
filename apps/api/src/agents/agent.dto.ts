@@ -6,7 +6,11 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { AgentStatus } from '@crewspace/database';
+import {
+  AgentKnowledgeVisibility,
+  AgentMemoryType,
+  AgentStatus,
+} from '@crewspace/database';
 
 export class CreatePersonaDto {
   @IsString()
@@ -97,4 +101,26 @@ export class UpdateAgentDto {
   @IsArray()
   @IsString({ each: true })
   capabilities?: string[];
+}
+
+export class CreateAgentMemoryDto {
+  @IsEnum(AgentMemoryType)
+  type: AgentMemoryType = AgentMemoryType.OBSERVATION;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
+  title?: string;
+
+  @IsString()
+  @MinLength(1)
+  content!: string;
+
+  @IsOptional()
+  @IsString()
+  source?: string;
+
+  @IsOptional()
+  @IsEnum(AgentKnowledgeVisibility)
+  visibility?: AgentKnowledgeVisibility;
 }

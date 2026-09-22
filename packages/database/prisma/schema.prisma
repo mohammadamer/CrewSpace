@@ -19,6 +19,8 @@ model User {
   sentInvitations WorkspaceInvitation[] @relation("InvitedBy")
   invitationAcceptances InvitationAcceptance[]
   auditEntries AuditLog[]
+  conversationMemberships ConversationMember[] @relation("UserConversationMembers")
+  authoredMessages Message[] @relation("UserAuthoredMessages")
 }
 
 model Session {
@@ -42,6 +44,8 @@ model Workspace {
   auditLogs AuditLog[]
   personas AgentPersona[]
   agents Agent[]
+  agentMemories AgentMemory[]
+  conversations Conversation[]
 
   @@index([createdAt])
 }
@@ -149,10 +153,75 @@ model Agent {
   workspace           Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   persona             AgentPersona? @relation(fields: [personaId], references: [id], onDelete: SetNull)
   capabilities        AgentCapability[]
-  activities           AgentActivity[]
+  activities          AgentActivity[]
+  memories            AgentMemory[]
+  conversationMemberships ConversationMember[] @relation("AgentConversationMembers")
+  authoredMessages     Message[]
 
   @@index([workspaceId, status])
   @@index([personaId])
+}
+
+model Conversation {
+  id          String               @id @default(uuid()) @db.Uuid
+  workspaceId String               @db.Uuid
+  type        ConversationType     @default(DIRECT)
+  title       String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  workspace   Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  members     ConversationMember[]
+  messages    Message[]
+
+  @@index([workspaceId, updatedAt])
+}
+
+model ConversationMember {
+  id             String        @id @default(uuid()) @db.Uuid
+  conversationId String        @db.Uuid
+  userId         String?       @db.Uuid
+  agentId        String?       @db.Uuid
+  createdAt      DateTime      @default(now())
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User?         @relation("UserConversationMembers", fields: [userId], references: [id], onDelete: Cascade)
+  agent          Agent?        @relation("AgentConversationMembers", fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@unique([conversationId, agentId])
+  @@index([userId])
+  @@index([agentId])
+}
+
+model Message {
+  id             String        @id @default(uuid()) @db.Uuid
+  conversationId String        @db.Uuid
+  authorUserId   String?       @db.Uuid
+  authorAgentId  String?       @db.Uuid
+  content        String
+  createdAt      DateTime      @default(now())
+  conversation   Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  authorUser     User?         @relation("UserAuthoredMessages", fields: [authorUserId], references: [id], onDelete: SetNull)
+  authorAgent    Agent?        @relation(fields: [authorAgentId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId, createdAt, id])
+}
+
+model AgentMemory {
+  id          String                  @id @default(uuid()) @db.Uuid
+  agentId     String                  @db.Uuid
+  workspaceId String                  @db.Uuid
+  type        AgentMemoryType         @default(OBSERVATION)
+  title       String?
+  content     String
+  source      String?
+  visibility  AgentKnowledgeVisibility @default(PRIVATE)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  agent       Agent                   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  workspace   Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, createdAt])
+  @@index([workspaceId, createdAt])
 }
 
 model AgentCapability {
@@ -206,4 +275,23 @@ enum AgentStatus {
   WAITING
   OFFLINE
   ERROR
+}
+
+enum AgentMemoryType {
+  OBSERVATION
+  NOTE
+  FACT
+  LEARNING
+  FILE_SUMMARY
+}
+
+enum AgentKnowledgeVisibility {
+  PRIVATE
+  SHARED
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+  CHANNEL
 }

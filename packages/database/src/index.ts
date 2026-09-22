@@ -1,5 +1,8 @@
 export {
+  AgentKnowledgeVisibility,
+  AgentMemoryType,
   AgentStatus,
+  ConversationType,
   InvitationStatus,
   InvitationType,
   Prisma,
