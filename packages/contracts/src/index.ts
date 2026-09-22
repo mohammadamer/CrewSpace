@@ -47,6 +47,15 @@ export type DomainEvent =
       { executionId: string; agentId: AgentId; status: string; error: string }
     >
   | EventEnvelope<
+      'CollaborationContextUpdated',
+      {
+        relationshipId: string;
+        agentId: AgentId;
+        relatedAgentId: AgentId;
+        action: string;
+      }
+    >
+  | EventEnvelope<
       'MessageCreated',
       {
         conversationId: ConversationId;

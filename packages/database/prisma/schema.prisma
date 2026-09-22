@@ -48,6 +48,7 @@ model Workspace {
   conversations Conversation[]
   agentExecutions AgentExecution[]
   agentCommunications AgentCommunication[]
+  agentRelationships AgentRelationship[]
 
   @@index([createdAt])
 }
@@ -162,6 +163,8 @@ model Agent {
   executions           AgentExecution[]
   outgoingCommunications AgentCommunication[] @relation("SourceAgentCommunications")
   incomingCommunications AgentCommunication[] @relation("TargetAgentCommunications")
+  relationships AgentRelationship[] @relation("AgentRelationships")
+  relatedRelationships AgentRelationship[] @relation("RelatedAgentRelationships")
 
   @@index([workspaceId, status])
   @@index([personaId])
@@ -269,6 +272,28 @@ model AgentCommunication {
   @@index([workspaceId, createdAt])
   @@index([conversationId, createdAt])
   @@index([sourceAgentId, targetAgentId, createdAt])
+}
+
+model AgentRelationship {
+  id                      String   @id @default(uuid()) @db.Uuid
+  workspaceId             String   @db.Uuid
+  agentId                 String   @db.Uuid
+  relatedAgentId          String   @db.Uuid
+  summary                 String?
+  interactionCount        Int      @default(0)
+  communicationPreferences Json
+  recentInteractions      Json
+  unresolvedTopics        Json
+  lastInteractionAt       DateTime?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  workspace               Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  agent                   Agent    @relation("AgentRelationships", fields: [agentId], references: [id], onDelete: Cascade)
+  relatedAgent            Agent    @relation("RelatedAgentRelationships", fields: [relatedAgentId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, agentId, relatedAgentId])
+  @@index([workspaceId, updatedAt])
+  @@index([agentId, relatedAgentId])
 }
 
 model AgentMemory {
