@@ -22,6 +22,8 @@ import { ExecutionRunner } from './runtime/execution-runner';
 import { MockRuntime } from './runtime/agent-runtime';
 import { ProjectsController } from './work/projects.controller';
 import { ProjectsService } from './work/projects.service';
+import { ConveneController } from './convene/convene.controller';
+import { ConveneService } from './convene/convene.service';
 import { AgentCommunicationController } from './agent-communication/communication.controller';
 import { AgentCommunicationService } from './agent-communication/communication.service';
 import { AgentCommunicationPolicy } from './agent-communication/communication.policy';
@@ -42,6 +44,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     ConversationController,
     ExecutionController,
     ProjectsController,
+    ConveneController,
     AgentCommunicationController,
     CollaborationContextController,
     InitiativeController,
@@ -65,6 +68,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     AgentCommunicationService,
     AgentCommunicationPolicy,
     ProjectsService,
+    ConveneService,
     CollaborationContextService,
     InitiativeService,
     AgentScheduler,

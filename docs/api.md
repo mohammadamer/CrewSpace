@@ -47,6 +47,16 @@ Phase 1 endpoints:
 - `POST /workspaces/:workspaceId/schedules/:scheduleId/cancel`
 - `POST /workspaces/:workspaceId/schedules/:scheduleId/wake`
 - `GET /workspaces/:workspaceId/schedules/:scheduleId/wake-cycles`
+- `GET /workspaces/:workspaceId/convenes`
+- `GET /workspaces/:workspaceId/convenes/:conveneId`
+- `POST /workspaces/:workspaceId/convenes`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/participants`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/start`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/pause`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/resume`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/contributions`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/complete`
+- `POST /workspaces/:workspaceId/convenes/:conveneId/cancel`
 - `GET /workspaces/:workspaceId/projects`
 - `POST /workspaces/:workspaceId/projects`
 - `GET /workspaces/:workspaceId/projects/:projectId`
@@ -74,5 +84,7 @@ Agent communication requires both Agents to belong to the Workspace and the conv
 Collaboration-context reads require Workspace membership. Creating, editing, and recording interactions require a non-Guest role. Relationship records store summaries, communication preferences, interaction counts, recent interactions, and unresolved topics; they do not represent literal emotion. Mutations create audit records and publish `CollaborationContextUpdated` events.
 
 Initiative schedule reads and wake-cycle inspection require Workspace membership. Creating, editing, and cancelling schedules require a non-Guest role. A wake cycle evaluates enabled state, timezone-aware active hours, cadence, cooldown, and daily budget. Each evaluation records an outcome and reason; `NO_ACTION` is an explicit result rather than an implicit failure. Schedule mutations and wake cycles are audited and wake-cycle events are published.
+
+Convene reads require Workspace membership; lifecycle mutations require a non-Guest Workspace role and Project membership when a Project is attached. A Convene requires multiple participants before starting, accepts discussion and evidence contributions, supports pause/resume, and completes by creating a Decision and optional project-owned action Tasks. Lifecycle transitions and completion are audited and publish `ConveneUpdated` events.
 
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.

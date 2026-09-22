@@ -50,6 +50,9 @@ model User {
   createdTasks Task[] @relation("TaskCreators")
   assignedTasks Task[] @relation("UserTaskAssignees")
   createdDecisions Decision[] @relation("DecisionCreators")
+  createdConvenes Convene[] @relation("ConveneCreators")
+  conveneParticipations ConveneParticipant[] @relation("UserConveneParticipants")
+  authoredContributions ConveneContribution[] @relation("UserContributions")
 }
 
 model Session {
@@ -82,6 +85,7 @@ model Workspace {
   projects Project[]
   tasks Task[]
   decisions Decision[]
+  convenes Convene[]
 
   @@index([createdAt])
 }
@@ -181,7 +185,7 @@ model Agent {
   personaId           String?     @db.Uuid
   name                String
   role                String
-  avatar              String?
+  avatar               String?
   status              AgentStatus @default(OFFLINE)
   modelConfiguration  Json
   createdAt           DateTime    @default(now())
@@ -201,6 +205,8 @@ model Agent {
   schedules AgentSchedule[]
   projectMemberships ProjectMember[] @relation("AgentProjectMembers")
   assignedTasks Task[] @relation("AgentTaskAssignees")
+  conveneParticipations ConveneParticipant[] @relation("AgentConveneParticipants")
+  authoredContributions ConveneContribution[] @relation("AgentContributions")
 
   @@index([workspaceId, status])
   @@index([personaId])
@@ -271,6 +277,7 @@ model Project {
   members     ProjectMember[]
   tasks       Task[]
   decisions   Decision[]
+  convenes    Convene[]
 
   @@index([workspaceId, status])
   @@index([createdById])
@@ -350,10 +357,68 @@ model Decision {
   project            Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
   createdBy          User         @relation("DecisionCreators", fields: [createdById], references: [id], onDelete: Restrict)
   sourceConversation Conversation? @relation(fields: [sourceConversationId], references: [id], onDelete: SetNull)
+  conveneId           String?      @unique @db.Uuid
+  convene             Convene?     @relation(fields: [conveneId], references: [id], onDelete: SetNull)
   tasks              Task[]
 
   @@index([workspaceId, createdAt])
   @@index([projectId, createdAt])
+}
+
+model Convene {
+  id          String        @id @default(uuid()) @db.Uuid
+  workspaceId String        @db.Uuid
+  projectId   String?       @db.Uuid
+  createdById String        @db.Uuid
+  title       String
+  topic       String
+  status      ConveneStatus @default(DRAFT)
+  startedAt   DateTime?
+  pausedAt    DateTime?
+  completedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project     Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdBy   User          @relation("ConveneCreators", fields: [createdById], references: [id], onDelete: Restrict)
+  participants ConveneParticipant[]
+  contributions ConveneContribution[]
+  decision    Decision?
+
+  @@index([workspaceId, status, updatedAt])
+  @@index([projectId, createdAt])
+}
+
+model ConveneParticipant {
+  id        String              @id @default(uuid()) @db.Uuid
+  conveneId String              @db.Uuid
+  userId    String?             @db.Uuid
+  agentId   String?             @db.Uuid
+  role      ConveneParticipantRole @default(PARTICIPANT)
+  createdAt DateTime            @default(now())
+  convene   Convene             @relation(fields: [conveneId], references: [id], onDelete: Cascade)
+  user      User?               @relation("UserConveneParticipants", fields: [userId], references: [id], onDelete: Cascade)
+  agent     Agent?              @relation("AgentConveneParticipants", fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([conveneId, userId])
+  @@unique([conveneId, agentId])
+  @@index([userId])
+  @@index([agentId])
+}
+
+model ConveneContribution {
+  id          String                  @id @default(uuid()) @db.Uuid
+  conveneId   String                  @db.Uuid
+  authorUserId String?                @db.Uuid
+  authorAgentId String?               @db.Uuid
+  type        ConveneContributionType  @default(DISCUSSION)
+  content     String
+  createdAt   DateTime                @default(now())
+  convene     Convene                 @relation(fields: [conveneId], references: [id], onDelete: Cascade)
+  authorUser  User?                   @relation("UserContributions", fields: [authorUserId], references: [id], onDelete: SetNull)
+  authorAgent Agent?                  @relation("AgentContributions", fields: [authorAgentId], references: [id], onDelete: SetNull)
+
+  @@index([conveneId, createdAt])
 }
 
 model ConversationMember {
@@ -576,4 +641,24 @@ enum ConversationType {
   DIRECT
   GROUP
   CHANNEL
+}
+
+enum ConveneStatus {
+  DRAFT
+  RUNNING
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum ConveneParticipantRole {
+  FACILITATOR
+  PARTICIPANT
+  OBSERVER
+}
+
+enum ConveneContributionType {
+  DISCUSSION
+  EVIDENCE
+  SYNTHESIS
 }
