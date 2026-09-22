@@ -102,4 +102,6 @@ Integration records are Workspace-scoped adapters with a provider enum, status, 
 
 The intelligence layer exposes a provider-agnostic search and embedding seam for later provider-backed ranking. Contracts define typed `SearchProvider`, `EmbeddingProvider`, `IntelligenceRequestContext`, and `SearchResult` shapes with strict privacy-safe validation for workspace scope, user scope, limit bounds, and private-knowledge access. Providers are selected through explicit enum names rather than hidden runtime inference, keeping cost, policy, and retrieval boundaries auditable.
 
+The offline synchronization layer exposes a `SyncState` contract and queued action model for reconnect-safe replay. Clients can persist queued actions keyed by workspace and dedupe key, mark the local sync state as `ONLINE`, `OFFLINE`, or `SYNCING`, and replay only unseen actions after reconnect without duplication or stale state drift.
+
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.

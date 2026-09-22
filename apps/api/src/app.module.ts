@@ -38,6 +38,8 @@ import { IntegrationController } from './integrations/integration.controller';
 import { IntegrationService } from './integrations/integration.service';
 import { IntelligencePolicy } from './intelligence/intelligence.policy';
 import { IntelligenceService } from './intelligence/intelligence.service';
+import { SyncPolicy } from './sync/sync.policy';
+import { SyncService } from './sync/sync.service';
 
 @Module({
   controllers: [
@@ -84,6 +86,8 @@ import { IntelligenceService } from './intelligence/intelligence.service';
     IntegrationService,
     IntelligencePolicy,
     IntelligenceService,
+    SyncPolicy,
+    SyncService,
   ],
 })
 export class AppModule {}
