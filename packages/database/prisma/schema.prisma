@@ -42,6 +42,7 @@ model Workspace {
   auditLogs AuditLog[]
   personas AgentPersona[]
   agents Agent[]
+  agentMemories AgentMemory[]
 
   @@index([createdAt])
 }
@@ -149,10 +150,29 @@ model Agent {
   workspace           Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   persona             AgentPersona? @relation(fields: [personaId], references: [id], onDelete: SetNull)
   capabilities        AgentCapability[]
-  activities           AgentActivity[]
+  activities          AgentActivity[]
+  memories            AgentMemory[]
 
   @@index([workspaceId, status])
   @@index([personaId])
+}
+
+model AgentMemory {
+  id          String                  @id @default(uuid()) @db.Uuid
+  agentId     String                  @db.Uuid
+  workspaceId String                  @db.Uuid
+  type        AgentMemoryType         @default(OBSERVATION)
+  title       String?
+  content     String
+  source      String?
+  visibility  AgentKnowledgeVisibility @default(PRIVATE)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  agent       Agent                   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  workspace   Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([agentId, createdAt])
+  @@index([workspaceId, createdAt])
 }
 
 model AgentCapability {
@@ -206,4 +226,17 @@ enum AgentStatus {
   WAITING
   OFFLINE
   ERROR
+}
+
+enum AgentMemoryType {
+  OBSERVATION
+  NOTE
+  FACT
+  LEARNING
+  FILE_SUMMARY
+}
+
+enum AgentKnowledgeVisibility {
+  PRIVATE
+  SHARED
 }

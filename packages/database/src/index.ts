@@ -1,4 +1,6 @@
 export {
+  AgentKnowledgeVisibility,
+  AgentMemoryType,
   AgentStatus,
   InvitationStatus,
   InvitationType,

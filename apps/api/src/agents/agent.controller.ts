@@ -9,7 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthenticatedRequest, SessionGuard } from '../auth/session.guard';
-import { CreateAgentDto, CreatePersonaDto, UpdateAgentDto } from './agent.dto';
+import {
+  CreateAgentDto,
+  CreateAgentMemoryDto,
+  CreatePersonaDto,
+  UpdateAgentDto,
+} from './agent.dto';
 import { AgentService } from './agent.service';
 
 @Controller('workspaces/:workspaceId')
@@ -51,6 +56,45 @@ export class AgentController {
     @Body() input: UpdateAgentDto,
   ) {
     return this.agents.updateAgent(
+      request.user!.id,
+      workspaceId,
+      agentId,
+      input,
+    );
+  }
+
+  @Get('agents/:agentId/memories')
+  listAgentMemories(
+    @Req() request: AuthenticatedRequest,
+    @Param('workspaceId') workspaceId: string,
+    @Param('agentId') agentId: string,
+  ) {
+    return this.agents.listMemories(request.user!.id, workspaceId, agentId);
+  }
+
+  @Get('agents/:agentId/memories/:memoryId')
+  getAgentMemory(
+    @Req() request: AuthenticatedRequest,
+    @Param('workspaceId') workspaceId: string,
+    @Param('agentId') agentId: string,
+    @Param('memoryId') memoryId: string,
+  ) {
+    return this.agents.getMemory(
+      request.user!.id,
+      workspaceId,
+      agentId,
+      memoryId,
+    );
+  }
+
+  @Post('agents/:agentId/memories')
+  createAgentMemory(
+    @Req() request: AuthenticatedRequest,
+    @Param('workspaceId') workspaceId: string,
+    @Param('agentId') agentId: string,
+    @Body() input: CreateAgentMemoryDto,
+  ) {
+    return this.agents.createMemory(
       request.user!.id,
       workspaceId,
       agentId,

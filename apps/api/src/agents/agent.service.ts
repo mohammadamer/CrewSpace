@@ -5,13 +5,24 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { AgentStatus, Prisma, WorkspaceRole } from '@crewspace/database';
+import {
+  AgentKnowledgeVisibility,
+  AgentMemoryType,
+  AgentStatus,
+  Prisma,
+  WorkspaceRole,
+} from '@crewspace/database';
 import { AgentId, WorkspaceId } from '@crewspace/contracts';
 import { InMemoryEventBus } from '../events/event-bus';
 import { PermissionPolicy } from '../permissions/permission.policy';
 import { PrismaService } from '../prisma.service';
 import { WorkspaceService } from '../workspace/workspace.service';
-import { CreateAgentDto, CreatePersonaDto, UpdateAgentDto } from './agent.dto';
+import {
+  CreateAgentDto,
+  CreateAgentMemoryDto,
+  CreatePersonaDto,
+  UpdateAgentDto,
+} from './agent.dto';
 import { starterPersonas } from './starter-personas';
 
 @Injectable()
@@ -206,6 +217,94 @@ export class AgentService {
       );
     }
     return result;
+  }
+
+  async listMemories(userId: string, workspaceId: string, agentId: string) {
+    await this.workspaces.requireMembership(userId, workspaceId);
+    await this.requireAgent(workspaceId, agentId);
+    const member = await this.workspaces.requireMembership(userId, workspaceId);
+    const isOwner = member.role === WorkspaceRole.OWNER;
+    const hasInspectionPermission = member.role === WorkspaceRole.ADMIN;
+    const memories = await this.prisma.agentMemory.findMany({
+      where: {
+        agentId,
+        workspaceId,
+        OR: [
+          {
+            visibility: AgentKnowledgeVisibility.PRIVATE,
+            ...(isOwner || hasInspectionPermission ? {} : { agentId: '' }),
+          },
+          { visibility: AgentKnowledgeVisibility.SHARED },
+        ],
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    return memories.filter((memory) => {
+      if (memory.visibility === AgentKnowledgeVisibility.SHARED) return true;
+      return isOwner || hasInspectionPermission;
+    });
+  }
+
+  async getMemory(
+    userId: string,
+    workspaceId: string,
+    agentId: string,
+    memoryId: string,
+  ) {
+    const membership = await this.workspaces.requireMembership(
+      userId,
+      workspaceId,
+    );
+    await this.requireAgent(workspaceId, agentId);
+    const memory = await this.prisma.agentMemory.findFirst({
+      where: { id: memoryId, agentId, workspaceId },
+    });
+    if (!memory) throw new NotFoundException('Agent memory not found');
+    const isOwner = membership.role === WorkspaceRole.OWNER;
+    const hasInspectionPermission = membership.role === WorkspaceRole.ADMIN;
+
+    if (memory.visibility === AgentKnowledgeVisibility.SHARED) return memory;
+    this.permissions.requirePrivateAgentKnowledgeAccess(
+      isOwner,
+      hasInspectionPermission,
+    );
+    return memory;
+  }
+
+  async createMemory(
+    userId: string,
+    workspaceId: string,
+    agentId: string,
+    input: CreateAgentMemoryDto,
+  ) {
+    const membership = await this.workspaces.requireMembership(
+      userId,
+      workspaceId,
+    );
+    const agent = await this.requireAgent(workspaceId, agentId);
+    this.permissions.requireWorkspaceRole(
+      membership.role,
+      WorkspaceRole.MEMBER,
+    );
+
+    const memory = await this.prisma.agentMemory.create({
+      data: {
+        agentId: agent.id,
+        workspaceId,
+        type: input.type ?? AgentMemoryType.OBSERVATION,
+        title: input.title?.trim(),
+        content: input.content.trim(),
+        source: input.source?.trim(),
+        visibility: input.visibility ?? AgentKnowledgeVisibility.PRIVATE,
+      },
+    });
+
+    await this.audit(workspaceId, userId, 'AGENT_MEMORY_CREATED', memory.id, {
+      agentId: agent.id,
+      type: memory.type,
+    });
+
+    return memory;
   }
 
   private async requireAgent(workspaceId: string, agentId: string) {

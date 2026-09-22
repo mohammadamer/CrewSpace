@@ -23,4 +23,24 @@ export class PermissionPolicy {
   canManageWorkspace(role: WorkspaceRole): boolean {
     return roleRank[role] >= roleRank.ADMIN;
   }
+
+  canAccessPrivateAgentKnowledge(
+    isOwner: boolean,
+    hasInspectionPermission: boolean,
+  ): boolean {
+    return isOwner || hasInspectionPermission;
+  }
+
+  requirePrivateAgentKnowledgeAccess(
+    isOwner: boolean,
+    hasInspectionPermission: boolean,
+  ): void {
+    if (
+      !this.canAccessPrivateAgentKnowledge(isOwner, hasInspectionPermission)
+    ) {
+      throw new ForbiddenException(
+        'Private agent knowledge requires owner access or explicit inspection permission',
+      );
+    }
+  }
 }
