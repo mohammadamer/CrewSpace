@@ -56,6 +56,10 @@ export type DomainEvent =
       }
     >
   | EventEnvelope<
+      'AgentWakeCycleRecorded',
+      { scheduleId: string; agentId: AgentId; status: string; reason: string }
+    >
+  | EventEnvelope<
       'MessageCreated',
       {
         conversationId: ConversationId;

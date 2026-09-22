@@ -41,6 +41,12 @@ Phase 1 endpoints:
 - `POST /workspaces/:workspaceId/agents/:agentId/relationships`
 - `PATCH /workspaces/:workspaceId/relationships/:relationshipId`
 - `POST /workspaces/:workspaceId/relationships/:relationshipId/interactions`
+- `GET /workspaces/:workspaceId/schedules`
+- `POST /workspaces/:workspaceId/agents/:agentId/schedules`
+- `PATCH /workspaces/:workspaceId/schedules/:scheduleId`
+- `POST /workspaces/:workspaceId/schedules/:scheduleId/cancel`
+- `POST /workspaces/:workspaceId/schedules/:scheduleId/wake`
+- `GET /workspaces/:workspaceId/schedules/:scheduleId/wake-cycles`
 
 Protected endpoints require `Authorization: Bearer <session>`. Tenant-owned data is always resolved through the authenticated User's Workspace membership.
 
@@ -55,3 +61,5 @@ Execution endpoints require non-Guest Workspace membership and validate the Agen
 Agent communication requires both Agents to belong to the Workspace and the conversation. The policy bounds message depth, token count, cumulative budget, cooldown, relevance, and repeated content. Blocked attempts are persisted with a reason and exposed through Agent activity; allowed messages are authored by the source Agent and publish `MessageCreated` with Agent authorship.
 
 Collaboration-context reads require Workspace membership. Creating, editing, and recording interactions require a non-Guest role. Relationship records store summaries, communication preferences, interaction counts, recent interactions, and unresolved topics; they do not represent literal emotion. Mutations create audit records and publish `CollaborationContextUpdated` events.
+
+Initiative schedule reads and wake-cycle inspection require Workspace membership. Creating, editing, and cancelling schedules require a non-Guest role. A wake cycle evaluates enabled state, timezone-aware active hours, cadence, cooldown, and daily budget. Each evaluation records an outcome and reason; `NO_ACTION` is an explicit result rather than an implicit failure. Schedule mutations and wake cycles are audited and wake-cycle events are published.
