@@ -1,1 +1,7 @@
-export { PrismaClient, Prisma, WorkspaceRole } from '@prisma/client';
+export {
+  InvitationStatus,
+  InvitationType,
+  Prisma,
+  PrismaClient,
+  WorkspaceRole,
+} from '@prisma/client';
