@@ -1,4 +1,5 @@
 export {
+  AgentExecutionStatus,
   AgentKnowledgeVisibility,
   AgentMemoryType,
   AgentStatus,

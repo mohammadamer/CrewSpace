@@ -46,6 +46,7 @@ model Workspace {
   agents Agent[]
   agentMemories AgentMemory[]
   conversations Conversation[]
+  agentExecutions AgentExecution[]
 
   @@index([createdAt])
 }
@@ -157,9 +158,45 @@ model Agent {
   memories            AgentMemory[]
   conversationMemberships ConversationMember[] @relation("AgentConversationMembers")
   authoredMessages     Message[]
+  executions           AgentExecution[]
 
   @@index([workspaceId, status])
   @@index([personaId])
+}
+
+model AgentExecution {
+  id              String                @id @default(uuid()) @db.Uuid
+  agentId         String                @db.Uuid
+  workspaceId     String                @db.Uuid
+  status          AgentExecutionStatus  @default(QUEUED)
+  prompt          String
+  output          String?
+  error           String?
+  attempt         Int                   @default(0)
+  maxAttempts     Int                   @default(3)
+  timeoutMs       Int                   @default(30000)
+  createdAt       DateTime              @default(now())
+  startedAt       DateTime?
+  completedAt     DateTime?
+  updatedAt       DateTime              @updatedAt
+  agent           Agent                 @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  workspace       Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  usage           UsageRecord?
+
+  @@index([workspaceId, createdAt])
+  @@index([agentId, createdAt])
+  @@index([workspaceId, status])
+}
+
+model UsageRecord {
+  id             String         @id @default(uuid()) @db.Uuid
+  executionId    String         @unique @db.Uuid
+  inputTokens    Int            @default(0)
+  outputTokens   Int            @default(0)
+  totalTokens    Int            @default(0)
+  durationMs     Int            @default(0)
+  createdAt      DateTime       @default(now())
+  execution      AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
 }
 
 model Conversation {
@@ -288,6 +325,15 @@ enum AgentMemoryType {
 enum AgentKnowledgeVisibility {
   PRIVATE
   SHARED
+}
+
+enum AgentExecutionStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  CANCELLED
+  TIMED_OUT
+  FAILED
 }
 
 enum ConversationType {

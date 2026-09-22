@@ -35,6 +35,18 @@ export type DomainEvent =
   | EventEnvelope<'AgentCreated', { name: string; role: string }>
   | EventEnvelope<'AgentStatusChanged', { status: string }>
   | EventEnvelope<
+      'AgentExecutionStarted',
+      { executionId: string; agentId: AgentId }
+    >
+  | EventEnvelope<
+      'AgentExecutionCompleted',
+      { executionId: string; agentId: AgentId; output: string }
+    >
+  | EventEnvelope<
+      'AgentExecutionFailed',
+      { executionId: string; agentId: AgentId; status: string; error: string }
+    >
+  | EventEnvelope<
       'MessageCreated',
       {
         conversationId: ConversationId;

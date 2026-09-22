@@ -16,6 +16,10 @@ import { AgentController } from './agents/agent.controller';
 import { AgentService } from './agents/agent.service';
 import { ConversationController } from './conversations/conversation.controller';
 import { ConversationService } from './conversations/conversation.service';
+import { ExecutionController } from './runtime/execution.controller';
+import { AgentExecutionService } from './runtime/execution.service';
+import { ExecutionRunner } from './runtime/execution-runner';
+import { MockRuntime } from './runtime/agent-runtime';
 
 @Module({
   controllers: [
@@ -26,6 +30,7 @@ import { ConversationService } from './conversations/conversation.service';
     MemberController,
     AgentController,
     ConversationController,
+    ExecutionController,
   ],
   providers: [
     PrismaService,
@@ -38,6 +43,11 @@ import { ConversationService } from './conversations/conversation.service';
     MemberService,
     AgentService,
     ConversationService,
+    AgentExecutionService,
+    {
+      provide: ExecutionRunner,
+      useFactory: () => new ExecutionRunner(new MockRuntime()),
+    },
   ],
 })
 export class AppModule {}
