@@ -36,6 +36,8 @@ import { InitiativeService } from './initiative/initiative.service';
 import { AgentScheduler } from './initiative/agent-scheduler';
 import { IntegrationController } from './integrations/integration.controller';
 import { IntegrationService } from './integrations/integration.service';
+import { IntelligencePolicy } from './intelligence/intelligence.policy';
+import { IntelligenceService } from './intelligence/intelligence.service';
 
 @Module({
   controllers: [
@@ -80,6 +82,8 @@ import { IntegrationService } from './integrations/integration.service';
     InitiativeService,
     AgentScheduler,
     IntegrationService,
+    IntelligencePolicy,
+    IntelligenceService,
   ],
 })
 export class AppModule {}

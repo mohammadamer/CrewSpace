@@ -1,5 +1,7 @@
 export type Brand<T, B extends string> = T & { readonly __brand: B };
 
+export * from './intelligence.js';
+
 export type UserId = Brand<string, 'UserId'>;
 export type WorkspaceId = Brand<string, 'WorkspaceId'>;
 export type AgentId = Brand<string, 'AgentId'>;
