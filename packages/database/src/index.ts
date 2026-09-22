@@ -11,4 +11,8 @@ export {
   Prisma,
   PrismaClient,
   WorkspaceRole,
+  ProjectMemberRole,
+  ProjectStatus,
+  TaskPriority,
+  TaskStatus,
 } from '@prisma/client';
