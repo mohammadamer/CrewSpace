@@ -27,3 +27,24 @@ test('in-memory events are sequenced and unsubscribable', () => {
   });
   assert.deepEqual(received, [1]);
 });
+
+test('event history replays events and reports an unavailable history gap', () => {
+  const bus = new InMemoryEventBus();
+  bus.publish({
+    id: 'event-1',
+    type: 'WorkspaceCreated',
+    aggregateId: 'workspace-1',
+    workspaceId: null,
+    occurredAt: new Date().toISOString(),
+    payload: { name: 'CrewSpace' },
+  });
+
+  const replay = bus.replayFrom(0);
+
+  assert.equal(replay.complete, true);
+  assert.deepEqual(
+    replay.events.map((event) => event.sequence),
+    [1],
+  );
+  assert.equal(replay.oldestSequence, 1);
+});
