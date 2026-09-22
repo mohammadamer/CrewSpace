@@ -47,6 +47,17 @@ Phase 1 endpoints:
 - `POST /workspaces/:workspaceId/schedules/:scheduleId/cancel`
 - `POST /workspaces/:workspaceId/schedules/:scheduleId/wake`
 - `GET /workspaces/:workspaceId/schedules/:scheduleId/wake-cycles`
+- `GET /workspaces/:workspaceId/projects`
+- `POST /workspaces/:workspaceId/projects`
+- `GET /workspaces/:workspaceId/projects/:projectId`
+- `PATCH /workspaces/:workspaceId/projects/:projectId`
+- `POST /workspaces/:workspaceId/projects/:projectId/members`
+- `GET /workspaces/:workspaceId/projects/:projectId/tasks`
+- `POST /workspaces/:workspaceId/projects/:projectId/tasks`
+- `PATCH /workspaces/:workspaceId/tasks/:taskId`
+- `POST /workspaces/:workspaceId/tasks/:taskId/dependencies`
+- `POST /workspaces/:workspaceId/decisions`
+- `GET /workspaces/:workspaceId/decisions`
 
 Protected endpoints require `Authorization: Bearer <session>`. Tenant-owned data is always resolved through the authenticated User's Workspace membership.
 
@@ -63,3 +74,5 @@ Agent communication requires both Agents to belong to the Workspace and the conv
 Collaboration-context reads require Workspace membership. Creating, editing, and recording interactions require a non-Guest role. Relationship records store summaries, communication preferences, interaction counts, recent interactions, and unresolved topics; they do not represent literal emotion. Mutations create audit records and publish `CollaborationContextUpdated` events.
 
 Initiative schedule reads and wake-cycle inspection require Workspace membership. Creating, editing, and cancelling schedules require a non-Guest role. A wake cycle evaluates enabled state, timezone-aware active hours, cadence, cooldown, and daily budget. Each evaluation records an outcome and reason; `NO_ACTION` is an explicit result rather than an implicit failure. Schedule mutations and wake cycles are audited and wake-cycle events are published.
+
+Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.

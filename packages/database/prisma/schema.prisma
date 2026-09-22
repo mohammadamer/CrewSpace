@@ -1,6 +1,30 @@
 generator client {
   provider = "prisma-client-js"
 }
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum ProjectMemberRole {
+  MEMBER
+  LEAD
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
 
 datasource db {
   provider = "postgresql"
@@ -21,6 +45,11 @@ model User {
   auditEntries AuditLog[]
   conversationMemberships ConversationMember[] @relation("UserConversationMembers")
   authoredMessages Message[] @relation("UserAuthoredMessages")
+  createdProjects Project[] @relation("ProjectCreators")
+  projectMemberships ProjectMember[] @relation("UserProjectMembers")
+  createdTasks Task[] @relation("TaskCreators")
+  assignedTasks Task[] @relation("UserTaskAssignees")
+  createdDecisions Decision[] @relation("DecisionCreators")
 }
 
 model Session {
@@ -50,6 +79,9 @@ model Workspace {
   agentCommunications AgentCommunication[]
   agentRelationships AgentRelationship[]
   agentSchedules AgentSchedule[]
+  projects Project[]
+  tasks Task[]
+  decisions Decision[]
 
   @@index([createdAt])
 }
@@ -167,6 +199,8 @@ model Agent {
   relationships AgentRelationship[] @relation("AgentRelationships")
   relatedRelationships AgentRelationship[] @relation("RelatedAgentRelationships")
   schedules AgentSchedule[]
+  projectMemberships ProjectMember[] @relation("AgentProjectMembers")
+  assignedTasks Task[] @relation("AgentTaskAssignees")
 
   @@index([workspaceId, status])
   @@index([personaId])
@@ -218,8 +252,108 @@ model Conversation {
   members     ConversationMember[]
   messages    Message[]
   agentCommunications AgentCommunication[]
+  sourceDecisions Decision[]
 
   @@index([workspaceId, updatedAt])
+}
+
+model Project {
+  id          String        @id @default(uuid()) @db.Uuid
+  workspaceId String        @db.Uuid
+  createdById String        @db.Uuid
+  name        String
+  description String?
+  status      ProjectStatus  @default(ACTIVE)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy   User          @relation("ProjectCreators", fields: [createdById], references: [id], onDelete: Restrict)
+  members     ProjectMember[]
+  tasks       Task[]
+  decisions   Decision[]
+
+  @@index([workspaceId, status])
+  @@index([createdById])
+}
+
+model ProjectMember {
+  id        String   @id @default(uuid()) @db.Uuid
+  projectId String   @db.Uuid
+  userId    String?  @db.Uuid
+  agentId   String?  @db.Uuid
+  role      ProjectMemberRole @default(MEMBER)
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User?    @relation("UserProjectMembers", fields: [userId], references: [id], onDelete: Cascade)
+  agent     Agent?   @relation("AgentProjectMembers", fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@unique([projectId, agentId])
+  @@index([userId])
+  @@index([agentId])
+}
+
+model Task {
+  id             String       @id @default(uuid()) @db.Uuid
+  workspaceId    String       @db.Uuid
+  projectId      String       @db.Uuid
+  createdById    String       @db.Uuid
+  assigneeUserId String?      @db.Uuid
+  assigneeAgentId String?     @db.Uuid
+  decisionId     String?      @db.Uuid
+  title          String
+  description    String?
+  status         TaskStatus   @default(TODO)
+  priority       TaskPriority @default(MEDIUM)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  workspace      Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy      User         @relation("TaskCreators", fields: [createdById], references: [id], onDelete: Restrict)
+  assigneeUser   User?        @relation("UserTaskAssignees", fields: [assigneeUserId], references: [id], onDelete: SetNull)
+  assigneeAgent  Agent?       @relation("AgentTaskAssignees", fields: [assigneeAgentId], references: [id], onDelete: SetNull)
+  decision       Decision?    @relation(fields: [decisionId], references: [id], onDelete: SetNull)
+  dependencies   TaskDependency[] @relation("TaskDependencies")
+  dependents     TaskDependency[] @relation("TaskDependents")
+
+  @@index([workspaceId, status, priority])
+  @@index([projectId, status])
+  @@index([assigneeUserId])
+  @@index([assigneeAgentId])
+}
+
+model TaskDependency {
+  taskId        String @db.Uuid
+  dependsOnTaskId String @db.Uuid
+  createdAt     DateTime @default(now())
+  task          Task @relation("TaskDependencies", fields: [taskId], references: [id], onDelete: Cascade)
+  dependsOnTask Task @relation("TaskDependents", fields: [dependsOnTaskId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, dependsOnTaskId])
+  @@index([dependsOnTaskId])
+}
+
+model Decision {
+  id                 String       @id @default(uuid()) @db.Uuid
+  workspaceId        String       @db.Uuid
+  projectId          String?      @db.Uuid
+  createdById        String       @db.Uuid
+  sourceConversationId String?    @db.Uuid
+  title              String
+  context            String
+  alternatives       Json
+  conclusion         String
+  provenance         String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  workspace          Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project            Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdBy          User         @relation("DecisionCreators", fields: [createdById], references: [id], onDelete: Restrict)
+  sourceConversation Conversation? @relation(fields: [sourceConversationId], references: [id], onDelete: SetNull)
+  tasks              Task[]
+
+  @@index([workspaceId, createdAt])
+  @@index([projectId, createdAt])
 }
 
 model ConversationMember {

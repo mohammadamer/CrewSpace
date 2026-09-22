@@ -20,6 +20,8 @@ import { ExecutionController } from './runtime/execution.controller';
 import { AgentExecutionService } from './runtime/execution.service';
 import { ExecutionRunner } from './runtime/execution-runner';
 import { MockRuntime } from './runtime/agent-runtime';
+import { ProjectsController } from './work/projects.controller';
+import { ProjectsService } from './work/projects.service';
 import { AgentCommunicationController } from './agent-communication/communication.controller';
 import { AgentCommunicationService } from './agent-communication/communication.service';
 import { AgentCommunicationPolicy } from './agent-communication/communication.policy';
@@ -39,6 +41,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     AgentController,
     ConversationController,
     ExecutionController,
+    ProjectsController,
     AgentCommunicationController,
     CollaborationContextController,
     InitiativeController,
@@ -61,6 +64,7 @@ import { AgentScheduler } from './initiative/agent-scheduler';
     },
     AgentCommunicationService,
     AgentCommunicationPolicy,
+    ProjectsService,
     CollaborationContextService,
     InitiativeService,
     AgentScheduler,
