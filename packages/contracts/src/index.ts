@@ -5,12 +5,14 @@ export * from './activation.js';
 export * from './cutover.js';
 export * from './device.js';
 export * from './final-activation.js';
+export * from './final-release-gating.js';
 export * from './integration.js';
 export * from './intelligence.js';
 export * from './notifications.js';
 export * from './provider.js';
 export * from './push.js';
 export * from './rollout.js';
+export * from './runtime-stabilization.js';
 export * from './secrets.js';
 export * from './sync.js';
 

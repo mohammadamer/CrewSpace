@@ -43,11 +43,13 @@ import { ActivationExecutionService } from './activation-execution/activation-ex
 import { ActivationService } from './activation/activation.service';
 import { CutoverService } from './cutover/cutover.service';
 import { FinalActivationService } from './final-activation/final-activation.service';
+import { FinalReleaseGatingService } from './final-release-gating/final-release-gating.service';
 import { ProviderIntegrationService } from './integrations/provider-integration.service';
 import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
 import { PushService } from './push/push.service';
 import { RolloutService } from './rollouts/rollout.service';
+import { RuntimeStabilizationService } from './runtime-stabilization/runtime-stabilization.service';
 import { SecretService } from './secrets/secret.service';
 import { SyncPolicy } from './sync/sync.policy';
 import { SyncService } from './sync/sync.service';
@@ -102,11 +104,13 @@ import { SyncService } from './sync/sync.service';
     ActivationService,
     CutoverService,
     FinalActivationService,
+    FinalReleaseGatingService,
     DeviceService,
     ProviderIntegrationService,
     ProviderService,
     PushService,
     RolloutService,
+    RuntimeStabilizationService,
     SecretService,
     SyncPolicy,
     SyncService,
