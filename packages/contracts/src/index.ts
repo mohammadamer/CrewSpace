@@ -13,6 +13,7 @@ export * from './notifications.js';
 export * from './production-readiness.js';
 export * from './provider.js';
 export * from './push.js';
+export * from './release-verification.js';
 export * from './rollout.js';
 export * from './runtime-stabilization.js';
 export * from './secrets.js';
