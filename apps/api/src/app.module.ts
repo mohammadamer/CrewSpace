@@ -48,6 +48,7 @@ import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
 import { PushService } from './push/push.service';
 import { RolloutService } from './rollouts/rollout.service';
+import { RuntimeStabilizationService } from './runtime-stabilization/runtime-stabilization.service';
 import { SecretService } from './secrets/secret.service';
 import { SyncPolicy } from './sync/sync.policy';
 import { SyncService } from './sync/sync.service';
@@ -107,6 +108,7 @@ import { SyncService } from './sync/sync.service';
     ProviderService,
     PushService,
     RolloutService,
+    RuntimeStabilizationService,
     SecretService,
     SyncPolicy,
     SyncService,
