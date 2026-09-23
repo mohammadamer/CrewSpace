@@ -42,6 +42,7 @@ import { DeviceService } from './devices/device.service';
 import { ActivationExecutionService } from './activation-execution/activation-execution.service';
 import { ActivationService } from './activation/activation.service';
 import { CutoverService } from './cutover/cutover.service';
+import { FinalActivationService } from './final-activation/final-activation.service';
 import { ProviderIntegrationService } from './integrations/provider-integration.service';
 import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
@@ -100,6 +101,7 @@ import { SyncService } from './sync/sync.service';
     ActivationExecutionService,
     ActivationService,
     CutoverService,
+    FinalActivationService,
     DeviceService,
     ProviderIntegrationService,
     ProviderService,
