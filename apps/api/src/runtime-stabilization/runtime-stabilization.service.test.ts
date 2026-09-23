@@ -4,7 +4,12 @@ import { RuntimeStabilizationService } from './runtime-stabilization.service';
 
 test('runtime stabilization service prepares release-gate records and plans', () => {
   const service = new RuntimeStabilizationService();
-  const record = service.createRecord('workspace-1', 'provider-1', 'production', ['health', 'latency']);
+  const record = service.createRecord(
+    'workspace-1',
+    'provider-1',
+    'production',
+    ['health', 'latency'],
+  );
   const plan = service.createPlan(
     'workspace-1',
     'provider-1',

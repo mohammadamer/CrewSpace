@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ReleaseGatePlan, RuntimeStabilizationRecord } from '@crewspace/contracts';
+import {
+  ReleaseGatePlan,
+  RuntimeStabilizationRecord,
+} from '@crewspace/contracts';
 
 @Injectable()
 export class RuntimeStabilizationService {
