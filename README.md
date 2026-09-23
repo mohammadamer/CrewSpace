@@ -6,7 +6,7 @@ This is not another chatbot. CrewSpace is designed around persistent Agent ident
 
 ## Current Status
 
-The current branch contains the Phase 1 foundation, Phase 2 workspace collaboration, Phase 3 Agents and Personas, the Phase 4 private Agent memory work, the Phase 5 conversation backend foundation, the Phase 6 Agent Runtime foundation, the Phase 7 bounded Agent-to-Agent communication foundation, the Phase 8 collaboration-context foundation, the Phase 9 Agent initiative scheduler foundation, the Phase 10 Projects, Tasks, and Decisions foundation, the Phase 11 Convene foundation, the Phase 12 human-approval foundation, the Phase 13 realtime synchronization foundation, the Phase 14 integration foundation, the Phase 15 advanced intelligence foundation, the Phase 16 offline sync foundation, the Phase 17 native client delivery foundation, the Phase 18 device-registration foundation, the Phase 19 push-registration foundation, the Phase 20 provider orchestration foundation, the Phase 21 provider-integration foundation, the Phase 22 secret-orchestration foundation, the Phase 23 rollout-orchestration foundation, the Phase 24 live-rollout-execution foundation, the Phase 25 cutover-readiness foundation, the Phase 26 live-cutover-execution foundation, the Phase 27 final-activation foundation, and the Phase 28 runtime-stabilization foundation:
+The current branch contains foundation work through Phase 32, including release verification and the MVP mock teammate experience:
 
 - pnpm and Turborepo monorepo.
 - NestJS API with PostgreSQL, Prisma, and Redis local infrastructure.
@@ -49,8 +49,31 @@ The current branch contains the Phase 1 foundation, Phase 2 workspace collaborat
 - Activation execution records and live cutover plans for production switch-over orchestration.
 - Final activation records and deployment stability plans for production-ready runtime activation.
 - Runtime stabilization records and release-gate plans for final runtime readiness and deployment safety.
+- Final release-gate records and deployment verification plans for production-safe handoff.
+- Production readiness records and deployment signoff plans for release approval and handoff safety.
+- Release verification records and plans for final deployment checks.
+- Idempotent MVP demo data for Atlas, Iris, Bram, and Nova with persisted greetings and deterministic mock replies.
 
-Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, Phase 9 adds bounded initiative scheduling, Phase 10 connects Decisions to durable Tasks, Phase 11 adds structured Convene decisions, Phase 12 adds explicit human approvals for sensitive Agent actions, Phase 13 hardens authenticated realtime delivery, Phase 14 adds controlled external integrations, Phase 15 adds provider-aware intelligence abstraction, Phase 16 establishes offline-first sync state, Phase 17 adds native notification and deep-link contracts, Phase 18 covers device registration and platform client readiness, Phase 19 covers push delivery registration and deduped routing, Phase 20 adds explicit provider orchestration metadata, Phase 21 adds provider credential binding and queue integration plans, Phase 22 adds secret binding and deployment readiness metadata, Phase 23 adds environment registration and rollout records, Phase 24 adds runtime activation and live rollout execution metadata, Phase 25 adds cutover gates and production readiness plans, Phase 26 adds live cutover execution records for production activation, Phase 27 adds final activation records for production stabilization, and Phase 28 adds runtime stabilization and release-gate records for final deployment readiness. Final deployment release gating remains planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
+Private Agent Knowledge is explicitly separated from workspace-shared context. Phase 5 covers the conversation and message backend foundation, Phase 6 covers provider-independent execution, Phase 7 adds bounded Agent-to-Agent communication, Phase 8 adds inspectable collaboration context without representing literal emotion, Phase 9 adds bounded initiative scheduling, Phase 10 connects Decisions to durable Tasks, Phase 11 adds structured Convene decisions, Phase 12 adds explicit human approvals for sensitive Agent actions, Phase 13 hardens authenticated realtime delivery, Phase 14 adds controlled external integrations, Phase 15 adds provider-aware intelligence abstraction, Phase 16 establishes offline-first sync state, Phase 17 adds native notification and deep-link contracts, Phase 18 covers device registration and platform client readiness, Phase 19 covers push delivery registration and deduped routing, Phase 20 adds explicit provider orchestration metadata, Phase 21 adds provider credential binding and queue integration plans, Phase 22 adds secret binding and deployment readiness metadata, Phase 23 adds environment registration and rollout records, Phase 24 adds runtime activation and live rollout execution metadata, Phase 25 adds cutover gates and production readiness plans, Phase 26 adds live cutover execution records for production activation, Phase 27 adds final activation records for production stabilization, Phase 28 adds runtime stabilization and release-gate records for final deployment readiness, Phase 29 adds final release-gate records for production handoff, Phase 30 adds production readiness records for deployment signoff, and Phase 31 adds deployment signoff records for production release approval. Final deployment verification remains planned. See [ImplementationSpecification.md](ImplementationSpecification.md) for the full roadmap.
+
+## Benefits
+
+- **Persistent teammates:** Agents have identity, Personas, capabilities, activity, and memory boundaries instead of acting as disposable chat sessions.
+- **Shared context:** Humans and Agents work in Workspace-scoped conversations, Projects, Tasks, Decisions, and Convene sessions.
+- **Human control:** Permissions, approvals, audit records, and explicit private knowledge boundaries keep sensitive actions reviewable.
+- **Cross-platform access:** The same backend and contracts support Web, Desktop, and Mobile clients.
+- **Provider independence:** The MockRuntime and provider abstractions make the product testable without external AI credentials.
+
+## Technology
+
+- **Monorepo:** pnpm workspaces and Turborepo.
+- **Backend:** NestJS, TypeScript, REST APIs, WebSockets, class-validator, and a typed event bus.
+- **Persistence:** PostgreSQL with Prisma migrations and repositories.
+- **Infrastructure:** Docker Compose with PostgreSQL and Redis.
+- **Web:** React, TypeScript, Vite, and a development proxy for the API.
+- **Desktop:** A Vite-ready React shell intended for a Tauri wrapper.
+- **Mobile:** Expo and React Native.
+- **Shared packages:** Contracts, core utilities, configuration, database, platform abstractions, and UI foundations.
 
 ## Development
 
@@ -75,25 +98,73 @@ See [docs/development.md](docs/development.md), [docs/architecture.md](docs/arch
 
 ## Run Locally
 
-Apply migrations, then start the API from the repository root:
+Install dependencies and start the local services:
+
+```bash
+pnpm install
+docker compose up -d
+```
+
+Apply the database migrations:
+
+```bash
+DATABASE_URL=postgresql://crewspace:crewspace@localhost:5432/crewspace \
+	pnpm --filter @crewspace/database exec prisma migrate deploy
+```
+
+Start the API in one terminal:
 
 ```bash
 DATABASE_URL=postgresql://crewspace:crewspace@localhost:5432/crewspace \
 	pnpm --filter @crewspace/api dev
 ```
 
-In another terminal, start the Web client:
+The API listens on `http://localhost:3000` and exposes the health check at `/api/v1/health`.
+
+### Web
+
+Start the Web client in another terminal:
 
 ```bash
-pnpm --filter @crewspace/web dev
+pnpm --filter @crewspace/web dev --host 0.0.0.0
 ```
 
-The API uses `http://localhost:3000` by default. Desktop and Mobile shells are available through:
+Open `http://localhost:5173`. During development, Vite proxies `/api/*` to the API, which also works in a remote container or Codespace. Set `VITE_API_URL` when the API is hosted elsewhere.
+
+### Mobile
+
+Start Expo:
 
 ```bash
-pnpm --filter @crewspace/desktop dev
 pnpm --filter @crewspace/mobile dev
 ```
+
+Use the Expo QR code or an emulator. The current Mobile shell is a foundation client and uses the local API address directly; a physical device or Android emulator may require replacing `localhost` with the host machine's reachable IP (`10.0.2.2` is typical for the Android emulator).
+
+### Desktop
+
+Start the Tauri-ready React shell:
+
+```bash
+pnpm --filter @crewspace/desktop dev --host 0.0.0.0
+```
+
+### Worker
+
+Run the background worker when testing scheduled or queued behavior:
+
+```bash
+pnpm --filter @crewspace/worker dev
+```
+
+## Using CrewSpace
+
+1. Open the Web client and choose **Create an account** or sign in.
+2. Create a Workspace when prompted.
+3. Empty Workspaces are seeded with Atlas, Iris, Bram, and Nova for MVP testing.
+4. Select a teammate to open their direct conversation and read the persisted greeting.
+5. Send a message. The demo teammate returns a deterministic mock reply without external provider credentials.
+6. Use the API and shared contracts when testing features that are not yet surfaced in the client UI.
 
 ## Starter Agent Team
 
@@ -105,6 +176,26 @@ curl -X POST http://localhost:3000/api/v1/workspaces/<workspace-id>/agents/start
 ```
 
 This creates customizable Personas and persistent Agents for Atlas (Researcher), Iris (Product Designer), Bram (Engineer), and Nova (Product Manager). Agent profiles expose status, capabilities, Persona data, and recent activity through the Agent API.
+
+## Contributing
+
+1. Fork the repository or create a focused feature branch from `dev`.
+2. Install dependencies and start PostgreSQL and Redis with the commands in [Run Locally](#run-locally).
+3. Keep business rules in the backend or shared domain packages; clients should consume typed contracts rather than duplicate rules.
+4. Keep each change focused on one phase or issue. Add tests for changed domain behavior and update documentation when public behavior changes.
+5. Run the full quality checks before opening a PR:
+
+```bash
+pnpm format:check
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+6. Describe the behavior changed, test evidence, migrations, configuration requirements, and any known limitations in the PR.
+
+Use [CONTRIBUTING.md](CONTRIBUTING.md) for the short contribution policy, [ImplementationSpecification.md](ImplementationSpecification.md) for phase boundaries, and [SECURITY.md](SECURITY.md) for security reporting.
 
 ## Repository Layout
 
