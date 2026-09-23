@@ -6,6 +6,7 @@ export * from './intelligence.js';
 export * from './notifications.js';
 export * from './provider.js';
 export * from './push.js';
+export * from './secrets.js';
 export * from './sync.js';
 
 export type UserId = Brand<string, 'UserId'>;

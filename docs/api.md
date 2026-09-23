@@ -114,4 +114,6 @@ The provider orchestration layer defines `ProviderRegistration` and `ProviderDel
 
 The provider integration layer defines `ProviderCredential` and `QueueIntegrationPlan` contracts for runtime delivery wiring. A credential binds a provider and workspace to a registered secret reference; a queue plan records the provider, queue key, retry policy, max attempts, and lifecycle status. These contracts keep live routing metadata explicit and auditable without exposing secret material through the application surface.
 
+The secret orchestration layer defines `SecretBinding` and `DeploymentPlan` contracts for provider configuration and rollout readiness. A secret binding binds a workspace-scoped provider to a secret reference; a deployment plan records the environment, status, and rollout notes. These contracts keep deployment metadata explicit and safe without letting configuration become ambient or hidden across the application boundary.
+
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.
