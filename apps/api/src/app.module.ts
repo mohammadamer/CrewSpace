@@ -44,6 +44,7 @@ import { ActivationService } from './activation/activation.service';
 import { CutoverService } from './cutover/cutover.service';
 import { FinalActivationService } from './final-activation/final-activation.service';
 import { FinalReleaseGatingService } from './final-release-gating/final-release-gating.service';
+import { ProductionReadinessService } from './production-readiness/production-readiness.service';
 import { ProviderIntegrationService } from './integrations/provider-integration.service';
 import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
@@ -105,6 +106,7 @@ import { SyncService } from './sync/sync.service';
     CutoverService,
     FinalActivationService,
     FinalReleaseGatingService,
+    ProductionReadinessService,
     DeviceService,
     ProviderIntegrationService,
     ProviderService,
