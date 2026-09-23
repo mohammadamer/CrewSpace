@@ -11,6 +11,7 @@ export * from './notifications.js';
 export * from './provider.js';
 export * from './push.js';
 export * from './rollout.js';
+export * from './runtime-stabilization.js';
 export * from './secrets.js';
 export * from './sync.js';
 
