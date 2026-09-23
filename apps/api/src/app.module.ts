@@ -39,6 +39,7 @@ import { IntegrationService } from './integrations/integration.service';
 import { IntelligencePolicy } from './intelligence/intelligence.policy';
 import { IntelligenceService } from './intelligence/intelligence.service';
 import { DeviceService } from './devices/device.service';
+import { ActivationExecutionService } from './activation-execution/activation-execution.service';
 import { ActivationService } from './activation/activation.service';
 import { CutoverService } from './cutover/cutover.service';
 import { ProviderIntegrationService } from './integrations/provider-integration.service';
@@ -96,6 +97,7 @@ import { SyncService } from './sync/sync.service';
     IntelligencePolicy,
     IntelligenceService,
     NotificationService,
+    ActivationExecutionService,
     ActivationService,
     CutoverService,
     DeviceService,
