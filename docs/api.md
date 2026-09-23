@@ -120,4 +120,6 @@ The rollout orchestration layer defines `EnvironmentRegistration` and `RolloutRe
 
 The live activation layer defines `RuntimeActivation` and `ActivationPlan` contracts for production rollout execution. An activation record tracks the workspace, provider, environment, mode, readiness checks, and activation state; the activation plan records the mode and notes for a live launch. These contracts make production activation explicit, measurable, and auditable without embedding execution state into the client surface.
 
+The cutover readiness layer defines `CutoverGate` and `CutoverPlan` contracts for production activation safety. A cutover gate tracks the workspace, provider, environment, readiness checks, and cutover state, while the cutover plan records the final status and notes for a switch-over event. This keeps production cutover decisions explicit and auditable before a live environment transition occurs.
+
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.
