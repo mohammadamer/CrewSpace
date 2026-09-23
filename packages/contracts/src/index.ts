@@ -9,6 +9,7 @@ export * from './final-release-gating.js';
 export * from './integration.js';
 export * from './intelligence.js';
 export * from './notifications.js';
+export * from './production-readiness.js';
 export * from './provider.js';
 export * from './push.js';
 export * from './rollout.js';
