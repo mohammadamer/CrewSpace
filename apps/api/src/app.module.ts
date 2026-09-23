@@ -50,6 +50,7 @@ import { ProviderIntegrationService } from './integrations/provider-integration.
 import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
 import { PushService } from './push/push.service';
+import { ReleaseVerificationService } from './release-verification/release-verification.service';
 import { RolloutService } from './rollouts/rollout.service';
 import { RuntimeStabilizationService } from './runtime-stabilization/runtime-stabilization.service';
 import { SecretService } from './secrets/secret.service';
@@ -109,6 +110,7 @@ import { SyncService } from './sync/sync.service';
     FinalReleaseGatingService,
     ProductionReadinessService,
     DeploymentSignoffService,
+    ReleaseVerificationService,
     DeviceService,
     ProviderIntegrationService,
     ProviderService,
