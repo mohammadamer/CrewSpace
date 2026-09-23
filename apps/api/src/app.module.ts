@@ -38,6 +38,7 @@ import { IntegrationController } from './integrations/integration.controller';
 import { IntegrationService } from './integrations/integration.service';
 import { IntelligencePolicy } from './intelligence/intelligence.policy';
 import { IntelligenceService } from './intelligence/intelligence.service';
+import { NotificationService } from './notifications/notification.service';
 import { SyncPolicy } from './sync/sync.policy';
 import { SyncService } from './sync/sync.service';
 
@@ -86,6 +87,7 @@ import { SyncService } from './sync/sync.service';
     IntegrationService,
     IntelligencePolicy,
     IntelligenceService,
+    NotificationService,
     SyncPolicy,
     SyncService,
   ],

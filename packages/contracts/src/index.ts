@@ -1,6 +1,7 @@
 export type Brand<T, B extends string> = T & { readonly __brand: B };
 
 export * from './intelligence.js';
+export * from './notifications.js';
 export * from './sync.js';
 
 export type UserId = Brand<string, 'UserId'>;

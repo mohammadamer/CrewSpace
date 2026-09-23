@@ -104,4 +104,6 @@ The intelligence layer exposes a provider-agnostic search and embedding seam for
 
 The offline synchronization layer exposes a `SyncState` contract and queued action model for reconnect-safe replay. Clients can persist queued actions keyed by workspace and dedupe key, mark the local sync state as `ONLINE`, `OFFLINE`, or `SYNCING`, and replay only unseen actions after reconnect without duplication or stale state drift.
 
+The native client delivery layer defines typed `NotificationPayload` and `DeepLink` contracts so platform clients can deliver workspace-scoped alerts with an explicit route and a safe deep link target. Notification payloads include a workspace id, channel, priority, title, body, optional actor, optional deep link, and timestamp. The server validates that the deep link stays within a valid workspace-scoped target route before it is delivered to Web, Desktop, or Mobile clients.
+
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.
