@@ -39,6 +39,7 @@ import { IntegrationService } from './integrations/integration.service';
 import { IntelligencePolicy } from './intelligence/intelligence.policy';
 import { IntelligenceService } from './intelligence/intelligence.service';
 import { DeviceService } from './devices/device.service';
+import { ActivationService } from './activation/activation.service';
 import { ProviderIntegrationService } from './integrations/provider-integration.service';
 import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
@@ -94,6 +95,7 @@ import { SyncService } from './sync/sync.service';
     IntelligencePolicy,
     IntelligenceService,
     NotificationService,
+    ActivationService,
     DeviceService,
     ProviderIntegrationService,
     ProviderService,

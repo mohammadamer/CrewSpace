@@ -1,5 +1,6 @@
 export type Brand<T, B extends string> = T & { readonly __brand: B };
 
+export * from './activation.js';
 export * from './device.js';
 export * from './integration.js';
 export * from './intelligence.js';
