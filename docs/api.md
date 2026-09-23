@@ -118,4 +118,6 @@ The secret orchestration layer defines `SecretBinding` and `DeploymentPlan` cont
 
 The rollout orchestration layer defines `EnvironmentRegistration` and `RolloutRecord` contracts for production environment readiness. An environment registration tracks the workspace, provider, environment, and validation checks, while a rollout record captures the deployment status and notes. This makes environment-level readiness explicit and auditable before a production rollout begins.
 
+The live activation layer defines `RuntimeActivation` and `ActivationPlan` contracts for production rollout execution. An activation record tracks the workspace, provider, environment, mode, readiness checks, and activation state; the activation plan records the mode and notes for a live launch. These contracts make production activation explicit, measurable, and auditable without embedding execution state into the client surface.
+
 Project and work-management reads require both Workspace and Project membership. Project and Task mutations require non-Guest Project members. Task transitions are dependency-aware and terminal states cannot be reopened. Tasks may be assigned to a Project member User or Agent, and a Decision can be related to a Task through Decision provenance. Decision creation and Task updates create audit records and publish typed events.
