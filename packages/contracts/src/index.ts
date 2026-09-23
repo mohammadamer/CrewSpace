@@ -4,6 +4,7 @@ export * from './activation-execution.js';
 export * from './activation.js';
 export * from './cutover.js';
 export * from './device.js';
+export * from './final-activation.js';
 export * from './integration.js';
 export * from './intelligence.js';
 export * from './notifications.js';
