@@ -43,6 +43,7 @@ import { ProviderIntegrationService } from './integrations/provider-integration.
 import { NotificationService } from './notifications/notification.service';
 import { ProviderService } from './providers/provider.service';
 import { PushService } from './push/push.service';
+import { SecretService } from './secrets/secret.service';
 import { SyncPolicy } from './sync/sync.policy';
 import { SyncService } from './sync/sync.service';
 
@@ -96,6 +97,7 @@ import { SyncService } from './sync/sync.service';
     ProviderIntegrationService,
     ProviderService,
     PushService,
+    SecretService,
     SyncPolicy,
     SyncService,
   ],
