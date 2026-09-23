@@ -3,6 +3,7 @@ export type Brand<T, B extends string> = T & { readonly __brand: B };
 export * from './activation-execution.js';
 export * from './activation.js';
 export * from './cutover.js';
+export * from './deployment-signoff.js';
 export * from './device.js';
 export * from './final-activation.js';
 export * from './final-release-gating.js';
