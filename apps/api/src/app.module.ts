@@ -42,6 +42,8 @@ import { DeviceService } from './devices/device.service';
 import { ActivationExecutionService } from './activation-execution/activation-execution.service';
 import { ActivationService } from './activation/activation.service';
 import { CutoverService } from './cutover/cutover.service';
+import { DemoController } from './demo/demo.controller';
+import { DemoService } from './demo/demo.service';
 import { DeploymentSignoffService } from './deployment-signoff/deployment-signoff.service';
 import { FinalActivationService } from './final-activation/final-activation.service';
 import { FinalReleaseGatingService } from './final-release-gating/final-release-gating.service';
@@ -74,6 +76,7 @@ import { SyncService } from './sync/sync.service';
     CollaborationContextController,
     InitiativeController,
     IntegrationController,
+    DemoController,
   ],
   providers: [
     PrismaService,
@@ -120,6 +123,7 @@ import { SyncService } from './sync/sync.service';
     SecretService,
     SyncPolicy,
     SyncService,
+    DemoService,
   ],
 })
 export class AppModule {}

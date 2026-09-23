@@ -58,5 +58,6 @@ ALTER TABLE "ConveneParticipant" ADD CONSTRAINT "ConveneParticipant_agentId_fkey
 ALTER TABLE "ConveneContribution" ADD CONSTRAINT "ConveneContribution_conveneId_fkey" FOREIGN KEY ("conveneId") REFERENCES "Convene"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "ConveneContribution" ADD CONSTRAINT "ConveneContribution_authorUserId_fkey" FOREIGN KEY ("authorUserId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE "ConveneContribution" ADD CONSTRAINT "ConveneContribution_authorAgentId_fkey" FOREIGN KEY ("authorAgentId") REFERENCES "Agent"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Decision" ADD COLUMN "conveneId" UUID;
 ALTER TABLE "Decision" ADD CONSTRAINT "Decision_conveneId_fkey" FOREIGN KEY ("conveneId") REFERENCES "Convene"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 CREATE UNIQUE INDEX "Decision_conveneId_key" ON "Decision"("conveneId");

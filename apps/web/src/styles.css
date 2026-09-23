@@ -127,6 +127,107 @@ article p {
   padding: 11px 16px;
   margin-top: 10px;
 }
+.auth-switch {
+  margin-top: 22px;
+}
+.workspace-panel {
+  margin-top: 56px;
+  background: #fff;
+  border: 1px solid #d9ded8;
+  border-radius: 10px;
+  padding: 28px;
+  min-height: 300px;
+}
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid #e5e9e4;
+  padding-bottom: 22px;
+}
+.panel-heading h3 {
+  margin: 10px 0 0;
+  font-size: 28px;
+  font-weight: 400;
+}
+.teammate-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 20px 0;
+  border-bottom: 1px solid #e5e9e4;
+}
+.teammate {
+  display: grid;
+  gap: 5px;
+  border: 1px solid #d9ded8;
+  border-radius: 6px;
+  background: #f7f8f5;
+  color: #17202a;
+  padding: 12px;
+  text-align: left;
+}
+.teammate span {
+  color: #68737d;
+  font-size: 13px;
+}
+.teammate.active,
+.teammate:hover {
+  border-color: #d86b3f;
+  background: #fff6f1;
+}
+.conversation-heading {
+  padding-top: 22px;
+}
+.conversation-heading h3 {
+  margin: 8px 0 0;
+  font-size: 24px;
+  font-weight: 400;
+}
+.empty-state {
+  padding: 48px 0 24px;
+}
+.messages {
+  display: grid;
+  gap: 12px;
+  padding: 24px 0;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.message {
+  width: min(80%, 620px);
+  margin: 0;
+  padding: 14px 16px;
+  background: #f2f4f0;
+  border-radius: 8px;
+}
+.message.own {
+  justify-self: end;
+  background: #e9cbbd;
+}
+.message p {
+  margin: 8px 0 0;
+  color: #17202a;
+}
+.composer {
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #e5e9e4;
+  padding-top: 20px;
+}
+.composer input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #cbd3cc;
+  border-radius: 6px;
+  padding: 12px;
+  color: #17202a;
+  font: 16px Georgia, serif;
+}
+.muted {
+  color: #68737d;
+}
 @media (max-width: 720px) {
   .auth-card {
     width: min(440px, calc(100% - 44px));
@@ -188,6 +289,25 @@ article p {
   }
   .content {
     padding: 40px 22px;
+  }
+  .workspace-panel {
+    margin-top: 40px;
+    padding: 20px;
+  }
+  .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .panel-heading .primary {
+    align-self: flex-start;
+  }
+  .teammate-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .composer {
+    align-items: stretch;
+    flex-direction: column;
   }
   .grid {
     grid-template-columns: 1fr;

@@ -1,4 +1,5 @@
 import { IncomingMessage } from 'node:http';
+import { Inject, Injectable } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, WebSocket } from 'ws';
 import { DomainEvent } from '@crewspace/contracts';
@@ -7,6 +8,7 @@ import { WorkspaceService } from '../workspace/workspace.service';
 import { InMemoryEventBus } from './event-bus';
 
 @WebSocketGateway({ path: '/api/v1/events' })
+@Injectable()
 export class EventsGateway {
   @WebSocketServer()
   server!: Server;
@@ -17,9 +19,9 @@ export class EventsGateway {
   >();
 
   constructor(
-    private readonly eventBus: InMemoryEventBus,
-    private readonly auth: AuthService,
-    private readonly workspaces: WorkspaceService,
+    @Inject(InMemoryEventBus) private readonly eventBus: InMemoryEventBus,
+    @Inject(AuthService) private readonly auth: AuthService,
+    @Inject(WorkspaceService) private readonly workspaces: WorkspaceService,
   ) {
     eventBus.subscribe((event) => this.broadcast(event));
   }
