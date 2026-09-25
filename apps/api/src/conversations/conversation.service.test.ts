@@ -13,7 +13,7 @@ const userId = 'user-1';
 function createService(overrides: Record<string, unknown> = {}) {
   const prisma = {
     conversation: {
-      findFirst: async () => ({ id: conversationId }),
+      findFirst: async () => ({ id: conversationId, members: [{ userId }] }),
       findMany: async () => [],
       update: async () => undefined,
     },
@@ -121,4 +121,87 @@ test('message pagination returns a stable next cursor', async () => {
       'base64url',
     ),
   );
+});
+
+test('a direct one-Agent conversation persists deterministic reply as that Agent', async () => {
+  const created: Array<Record<string, unknown>> = [];
+  const prisma = {
+    conversation: {
+      findFirst: async () => ({
+        id: conversationId,
+        type: 'DIRECT',
+        members: [{ userId }, { agentId: 'agent-atlas' }],
+      }),
+      update: async () => undefined,
+    },
+    message: {
+      create: async ({ data }: { data: Record<string, unknown> }) => {
+        const row = { id: `message-${created.length + 1}`, ...data };
+        created.push(row);
+        return row;
+      },
+    },
+    agent: { findFirst: async () => ({ name: 'Atlas', role: 'Researcher' }) },
+  } as unknown as PrismaService;
+  const service = new ConversationService(
+    prisma,
+    {
+      requireMembership: async () => ({ role: 'OWNER' }),
+    } as unknown as WorkspaceService,
+    new PermissionPolicy(),
+    new InMemoryEventBus(),
+  );
+
+  await service.createMessage(userId, workspaceId, conversationId, {
+    content: '  Compare these options  ',
+  });
+
+  assert.equal(created.length, 2);
+  assert.equal(created[0]?.content, 'Compare these options');
+  assert.equal(created[0]?.authorUserId, userId);
+  assert.equal(created[1]?.authorAgentId, 'agent-atlas');
+  assert.equal(created[1]?.authorUserId, undefined);
+  assert.match(String(created[1]?.content), /Atlas.*Compare these options/);
+});
+
+test('group and human-only direct conversations do not trigger mock replies', async () => {
+  for (const conversation of [
+    {
+      id: conversationId,
+      type: 'GROUP',
+      members: [{ userId }, { agentId: 'agent-atlas' }],
+    },
+    {
+      id: conversationId,
+      type: 'DIRECT',
+      members: [{ userId }, { userId: 'user-2' }],
+    },
+  ]) {
+    const created: Array<Record<string, unknown>> = [];
+    const prisma = {
+      conversation: {
+        findFirst: async () => conversation,
+        update: async () => undefined,
+      },
+      message: {
+        create: async ({ data }: { data: Record<string, unknown> }) => {
+          created.push(data);
+          return { id: 'message', ...data };
+        },
+      },
+      agent: { findFirst: async () => ({ name: 'Atlas', role: 'Researcher' }) },
+    } as unknown as PrismaService;
+    const service = new ConversationService(
+      prisma,
+      {
+        requireMembership: async () => ({ role: 'OWNER' }),
+      } as unknown as WorkspaceService,
+      new PermissionPolicy(),
+      new InMemoryEventBus(),
+    );
+    await service.createMessage(userId, workspaceId, conversationId, {
+      content: 'Hello',
+    });
+    assert.equal(created.length, 1);
+  }
 });

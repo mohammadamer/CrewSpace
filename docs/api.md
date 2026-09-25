@@ -26,6 +26,7 @@ Phase 1 endpoints:
 - `POST /workspaces/:workspaceId/agents`
 - `PATCH /workspaces/:workspaceId/agents/:agentId`
 - `POST /workspaces/:workspaceId/agents/starter-team`
+- `POST /workspaces/:workspaceId/onboarding/initialize` (creates the starter team and direct chats for workspace admins)
 - `GET /workspaces/:workspaceId/personas`
 - `POST /workspaces/:workspaceId/personas`
 - `POST /workspaces/:workspaceId/conversations`

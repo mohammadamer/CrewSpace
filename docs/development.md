@@ -17,4 +17,6 @@ The default local services are PostgreSQL on port 5432 and Redis on port 6379. A
 DATABASE_URL=postgresql://crewspace:crewspace@localhost:5432/crewspace pnpm --filter @crewspace/database exec prisma migrate deploy
 ```
 
-Run the API with `pnpm --filter @crewspace/api dev`, Web with `pnpm --filter @crewspace/web dev`, and the Mobile shell with `pnpm --filter @crewspace/mobile dev`.
+Run the API with `pnpm --filter @crewspace/api dev`, Web with `pnpm --filter @crewspace/web dev`, and the Mobile shell with `pnpm --filter @crewspace/mobile dev`. The API allows the Web dev origin `http://localhost:5173` by default; set `WEB_ORIGIN` when the Web runs at another origin.
+
+Run API end-to-end tests against a migrated, disposable database with `DATABASE_URL=... pnpm --filter @crewspace/api test:e2e`.

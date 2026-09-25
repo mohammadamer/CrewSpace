@@ -116,7 +116,11 @@ export class ConversationService {
     conversationId: string,
     input: CreateMessageDto,
   ) {
-    await this.requireConversationMember(userId, workspaceId, conversationId);
+    const conversation = await this.requireConversationMember(
+      userId,
+      workspaceId,
+      conversationId,
+    );
     const content = input.content.trim();
     if (content.length === 0) {
       throw new ConflictException('Message content cannot be empty');
@@ -134,8 +138,23 @@ export class ConversationService {
     });
     await this.prisma.conversation.update({
       where: { id: conversationId },
-      data: { updatedAt: new Date() },
+      data: { updatedAt: message.createdAt },
     });
+    const agentMembers = conversation.members.filter(
+      (member) => member.agentId,
+    );
+    if (
+      conversation.type === 'DIRECT' &&
+      conversation.members.length === 2 &&
+      agentMembers.length === 1
+    ) {
+      await this.createMockReply(
+        workspaceId,
+        conversationId,
+        agentMembers[0]!.agentId!,
+        content,
+      );
+    }
     this.events.publish({
       id: randomUUID(),
       type: 'MessageCreated',
@@ -187,6 +206,31 @@ export class ConversationService {
     };
   }
 
+  private async createMockReply(
+    workspaceId: string,
+    conversationId: string,
+    agentId: string,
+    userContent: string,
+  ): Promise<void> {
+    const agent = await this.prisma.agent.findFirst({
+      where: { id: agentId, workspaceId },
+      select: { name: true, role: true },
+    });
+    if (!agent) return;
+    const excerpt = userContent.replace(/\s+/g, ' ').slice(0, 500);
+    const reply = await this.prisma.message.create({
+      data: {
+        conversationId,
+        authorAgentId: agentId,
+        content: `Hi, I'm ${agent.name} (${agent.role}). I read: “${excerpt}” I'll help you work through a practical next step.`,
+      },
+    });
+    await this.prisma.conversation.update({
+      where: { id: conversationId },
+      data: { updatedAt: reply.createdAt },
+    });
+  }
+
   private async requireConversationMember(
     userId: string,
     workspaceId: string,
@@ -199,6 +243,7 @@ export class ConversationService {
         workspaceId,
         members: { some: { userId } },
       },
+      include: { members: true },
     });
     if (!conversation) {
       throw new ForbiddenException('Conversation membership required');
