@@ -17,7 +17,7 @@ CREATE TABLE "ConversationMember" (
   "agentId" UUID,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "ConversationMember_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "ConversationMember_one_participant_type_check" CHECK (("userId" IS NOT NULL AND "agentId" IS NULL) OR ("userId" IS NULL AND "agentId" IS NOT NULL)
+  CONSTRAINT "ConversationMember_one_participant_type_check" CHECK (("userId" IS NOT NULL AND "agentId" IS NULL) OR ("userId" IS NULL AND "agentId" IS NOT NULL))
 );
 
 CREATE TABLE "Message" (

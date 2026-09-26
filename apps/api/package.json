@@ -8,7 +8,8 @@
     "lint": "tsc -p tsconfig.json --noEmit",
     "start": "node dist/main.js",
     "test": "node --test dist/**/*.test.js",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:e2e": "node --test tests/*.e2e.cjs"
   },
   "dependencies": {
     "@crewspace/config": "workspace:*",

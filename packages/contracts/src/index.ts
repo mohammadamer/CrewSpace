@@ -43,3 +43,20 @@ export type DomainEvent =
         content: string;
       }
     >;
+
+/** Sent as { event: 'subscribe', data: EventSubscription } on /api/v1/events. */
+export interface EventSubscription {
+  token: string;
+  workspaceId: string;
+  afterSequence?: number;
+  streamId?: string;
+}
+
+export type EventStreamControl =
+  | {
+      type: 'subscribed';
+      workspaceId: string;
+      streamId: string;
+      sequence: number;
+    }
+  | { type: 'resync_required' };
