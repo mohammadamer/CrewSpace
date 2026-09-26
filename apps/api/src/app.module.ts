@@ -16,6 +16,8 @@ import { AgentController } from './agents/agent.controller';
 import { AgentService } from './agents/agent.service';
 import { ConversationController } from './conversations/conversation.controller';
 import { ConversationService } from './conversations/conversation.service';
+import { OnboardingController } from './onboarding/onboarding.controller';
+import { OnboardingService } from './onboarding/onboarding.service';
 
 @Module({
   controllers: [
@@ -26,6 +28,7 @@ import { ConversationService } from './conversations/conversation.service';
     MemberController,
     AgentController,
     ConversationController,
+    OnboardingController,
   ],
   providers: [
     PrismaService,
@@ -38,6 +41,7 @@ import { ConversationService } from './conversations/conversation.service';
     MemberService,
     AgentService,
     ConversationService,
+    OnboardingService,
   ],
 })
 export class AppModule {}
